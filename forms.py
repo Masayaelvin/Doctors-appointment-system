@@ -13,7 +13,7 @@ class RegistrationForm(FlaskForm):
     phone_number = IntegerField('phone number', 
                                 validators=[DataRequired(), Optional()])
     password = StringField('Password', 
-                           validators=[DataRequired, Length(min=4, max=16, message="length of 4 and 16 characters")])
+                           validators=[DataRequired(), Length(min=4, max=16, message="length of 4 and 16 characters")])
     confirm_password = StringField('Confirm Password',
                                    validators=[DataRequired(), EqualTo('password')])
     submit =SubmitField('Sign up')
@@ -23,7 +23,7 @@ class LoginForm(FlaskForm):
     email = StringField('Email', 
                         validators=[DataRequired(), Email()])
     password = StringField('Password', 
-                           validators=[DataRequired, Length(min=4, max=16, message="length of 4 and 16 characters")])
+                           validators=[DataRequired(), Length(min=4, max=16, message="length of 4 and 16 characters")])
     remember =BooleanField('Remember me')
     submit =SubmitField('Login')
     
@@ -37,14 +37,14 @@ class DoctorsRegistration(FlaskForm):
     Availability = SelectField('availability', 
                                choices=[('always available', 'always available'), ('mon-fri', 'mon-fri'), 
                                         ('sat & sun','sat & sun' ),('currently not available!')],
-                               validate_choice=True, validators=[DataRequired])
-    working_hours = StringField('working hours',validators=[DataRequired] )
+                               validate_choice=True, validators=[DataRequired()])
+    working_hours = StringField('working hours',validators=[DataRequired()] )
     Short_description = TextAreaField('Short_description')
     submit =SubmitField('Register')
     
     
 class AppointmentForm(FlaskForm):
-    appointment_date = DateField('Appointment Date', validators=[DataRequired])
-    appointment_time = TimeField('time',validators=[DataRequired])
+    appointment_date = DateField('Appointment Date', validators=[DataRequired()])
+    appointment_time = TimeField('time',validators=[DataRequired()])
     doctors_name = StringField('Doctor')
     submit =SubmitField('Set appointment')

@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template
-from forms import RegistrationForm
+from flask import Flask, render_template, url_for
+from forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration
 
 
 app =  Flask(__name__)
@@ -11,10 +11,31 @@ db = SQLAlchemy(app)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
-@app.route('/registration')
+@app.route('/registration', methods=['GET', 'POST'])
 def registration():
     form = RegistrationForm
     return render_template('registration.html', form=form)
+
+
+@app.route('/Login',  methods=['GET', 'POST'])
+def Login():
+    form = LoginForm
+    return render_template('login.html', form=form)
+
+@app.route('/appoinment')
+def appointment():
+    form = AppointmentForm
+    return render_template('appointment.html', form=form)
+
+
+@app.route('/Doctors')
+def doctors():
+    form = DoctorsRegistration
+    return render_template('doctors.html', form=form)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -30,17 +30,19 @@ class LoginForm(FlaskForm):
 
 class DoctorsRegistration(FlaskForm):
     Qualification = StringField('Specilization', 
-                                choices =[('Doctor','Doctor'), ('dentist', 'dentist'), ('gynacologist', 'gynacologist')],
+                                choices =[('Doctor','Doctor'), ('surgeon', 'surgeon'), ('nurse', 'nurse')],
                                 validators=[DataRequired()])
     Specialisation= SelectField('Qualification', 
-                                choices =[('sergon','sergion'), ('dentist', 'dentist'), ('gynacologist', 'gynacologist')], 
+                                choices =[('dematologist','dematologist'), ('dentist', 'dentist'), ('gynacologist', 'gynacologist')], 
                                 validators=[DataRequired(),Length(min=1)])
-    license_number = IntegerField('Nationa ID', validators=[DataRequired()])
-    Availability = SelectField('availability', 
-                               choices=[('always available', 'always available'), ('mon-fri', 'mon-fri'), 
-                                        ('sat & sun','sat & sun' ),('currently not available!')],
+    license_number = IntegerField('Licence Number', validators=[DataRequired()])
+    working_hours = SelectField('working hours', 
+                               choices=[('8-10', '8-10'), ('10-1', '10-1'), ('2-4','2-4')],
                                validate_choice=True, validators=[DataRequired()])
-    working_hours = StringField('working hours',validators=[DataRequired()] )
+    availability = SelectField('Availability',
+                               choices=[('currently not available!', 'currently not available!' ), ('available', 'available')],
+                               validate_choice=True,
+                               validators=[DataRequired()] )
     Short_description = TextAreaField('Short_description')
     submit =SubmitField('Register')
 

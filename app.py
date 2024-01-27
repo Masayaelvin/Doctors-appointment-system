@@ -14,9 +14,10 @@ def home():
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
-    form = RegistrationForm
+    form = RegistrationForm()
     
-    return render_template('registration.html', form=form)
+    
+    return render_template('registration.html',title='register', form=form)
 
 
 @app.route('/Login',  methods=['GET', 'POST'])

@@ -27,6 +27,7 @@ class Doctor(db.Model):
     working_hours = db.Column(db.String, nullable=False)
     Short_description = db.Column(db.Text)  # Corrected from db.column to db.Column
     services = db.relationship('Service', backref='doctor', lazy=True)
+    profile_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
     
     def __repr__(self):

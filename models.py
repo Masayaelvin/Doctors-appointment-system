@@ -15,6 +15,13 @@ class User(db.Model):
     
     def __repr__(self):
         return f"user( username:'{self.firstName}' + ' ' + '{self.lastName}' number: '{self.phone_number}' id:'{self.User_id}')"
+    
+# Association Table
+doctor_patient_association = db.Table(
+    'doctor_patient_association',
+    db.Column('doctor_id', db.String, db.ForeignKey('doctor.Doctor_id')),
+    db.Column('patient_id', db.String, db.ForeignKey('patient.Patient_id'))
+)
                     
 class Doctor(db.Model):
     Doctor_id = db.Column(db.String(), primary_key=True)
@@ -27,6 +34,7 @@ class Doctor(db.Model):
     working_hours = db.Column(db.String, nullable=False)
     Short_description = db.Column(db.Text)  # Corrected from db.column to db.Column
     services = db.relationship('Service', backref='doctor', lazy=True)
+    patients = db.relationship('Patient', secondary=doctor_patient_association, backref='doctors', lazy=True)
     profile_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
     
@@ -42,10 +50,11 @@ class Patient(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(20), default='Patient')
     profile_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
-    Patient=db.relationship('Appointments' ,backref='client', lazy=True)
+    Patient=db.relationship('Appointment' ,backref='client', lazy=True)
    
     def __repr__(self):
         return f"user( username:'{self.firstName}' + ' ' + '{self.lastName}' + ' ' + number:'{self.phone_number}' + ' ' + id:'{self.User_id}')"
+    
     
                     
 class Service(db.Model):
@@ -54,7 +63,7 @@ class Service(db.Model):
     service_name = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
-        return f"Service( service:'{self.service_id}' + ' ' + '{self.doctor_id}' + ' ' +  service:'{self.service_name}')"
+        return f"Service( service:'{self.service_id}' '{self.doctor_id}' + ' ' +  service:'{self.service_name}')"
 
 class Appointment(db.Model):
     appointment_id = db.Column(db.String(), primary_key=True, nullable=False)

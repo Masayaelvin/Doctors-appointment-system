@@ -59,7 +59,7 @@ class Service(db.Model):
 class Appointment(db.Model):
     appointment_id = db.Column(db.String(), primary_key=True, nullable=False)
     appointment_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    appointment_time=db.Column()
+    appointment_time=db.Column(db.String, default='8-10')
     Doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
     client_id = db.Column(db.String(),db.ForeignKey('patient.Patient_id'), nullable=False)
     service = db.Column(db.String(), nullable=False)

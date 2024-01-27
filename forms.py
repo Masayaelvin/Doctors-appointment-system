@@ -29,11 +29,13 @@ class LoginForm(FlaskForm):
     
 
 class DoctorsRegistration(FlaskForm):
-    Specialisation = StringField('Specilization', validators=[DataRequired()])
-    Qualification = SelectField('Qualification', 
+    Qualification = StringField('Specilization', 
+                                choices =[('Doctor','Doctor'), ('dentist', 'dentist'), ('gynacologist', 'gynacologist')],
+                                validators=[DataRequired()])
+    Specialisation= SelectField('Qualification', 
                                 choices =[('sergon','sergion'), ('dentist', 'dentist'), ('gynacologist', 'gynacologist')], 
                                 validators=[DataRequired(),Length(min=1)])
-    Id_number = IntegerField('Nationa ID', validators=[DataRequired()])
+    license_number = IntegerField('Nationa ID', validators=[DataRequired()])
     Availability = SelectField('availability', 
                                choices=[('always available', 'always available'), ('mon-fri', 'mon-fri'), 
                                         ('sat & sun','sat & sun' ),('currently not available!')],
@@ -41,10 +43,16 @@ class DoctorsRegistration(FlaskForm):
     working_hours = StringField('working hours',validators=[DataRequired()] )
     Short_description = TextAreaField('Short_description')
     submit =SubmitField('Register')
+
+class ServiceForm(FlaskForm):
+    services = StringField('add a service', validators=[DataRequired()] )
+    submit = SubmitField('add')
     
     
 class AppointmentForm(FlaskForm):
     appointment_date = DateField('Appointment Date', validators=[DataRequired()])
     appointment_time = TimeField('time',validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    service = SelectField('Service', choices=[()])
     doctors_name = StringField('Doctor')
     submit =SubmitField('Set appointment')

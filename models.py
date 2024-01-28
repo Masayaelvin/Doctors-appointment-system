@@ -14,7 +14,7 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     
     def __repr__(self):
-        return f"user( username:'{self.firstName}' + ' ' + '{self.lastName}' number: '{self.phone_number}' id:'{self.User_id}')"
+        return f"user( username:'{self.firstName}' '{self.lastName}' number: '{self.phone_number}' id:'{self.User_id}')"
     
 # Association Table
 doctor_patient_association = db.Table(
@@ -28,6 +28,8 @@ class Doctor(db.Model):
     firstName = db.Column(db.String(20), nullable=False)
     lastName = db.Column(db.String(20), nullable=False)
     license_number = db.Column(db.Integer, unique=True, nullable=False)
+    clinic_name = db.Column(db.String(20), nullable=False)
+    clinic_address = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(10), default='Doctor')  # Fixed the typo here
     password = db.Column(db.String, nullable=False)
@@ -39,7 +41,7 @@ class Doctor(db.Model):
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
     
     def __repr__(self):
-        return f"Doctor( Doctor:'{self.firstName}' + ' ' + '{self.lastName}'number: '{self.phone_number}' + ' ' +  id:'{self.user_type}')"
+        return f"Doctor( Doctor:'{self.firstName}' '{self.lastName}'number: '{self.phone_number}' id:'{self.user_type}')"
 
 
 class Patient(db.Model):
@@ -53,7 +55,7 @@ class Patient(db.Model):
     Patient=db.relationship('Appointment' ,backref='client', lazy=True)
    
     def __repr__(self):
-        return f"user( username:'{self.firstName}' + ' ' + '{self.lastName}' + ' ' + number:'{self.phone_number}' + ' ' + id:'{self.User_id}')"
+        return f"Patient( username:'{self.firstName}' '{self.lastName}' number:'{self.phone_number}' id:'{self.email}')"
     
     
                     
@@ -63,7 +65,7 @@ class Service(db.Model):
     service_name = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
-        return f"Service( service:'{self.service_id}' '{self.doctor_id}' + ' ' +  service:'{self.service_name}')"
+        return f"Service( service:'{self.service_id}' '{self.doctor_id}' service:'{self.service_name}')"
 
 class Appointment(db.Model):
     appointment_id = db.Column(db.String(), primary_key=True, nullable=False)
@@ -74,6 +76,6 @@ class Appointment(db.Model):
     service = db.Column(db.String(), nullable=False)
     
     def __repr__(self):
-        return f"appointment( appointment:'{self.appointment_date}' + ' ' + '{self.appointment_time}' + ' ' +  service:'{self.service}')"
+        return f"appointment( appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}')"
     
     

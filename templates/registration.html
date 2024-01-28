@@ -1,5 +1,10 @@
 {% extends 'layout.html' %}
 {% block content %}
+<head>
+    <!--form css-->
+		<link rel="stylesheet" href="{{url_for('static', filename='css/form.css')}}">
+</head>
+<div class="contain">
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }} 
@@ -37,9 +42,9 @@
     </div>
     <div class="border-top pt-3">
         <small class="text-muted">
-            Already have an account? <a class="ml-2" href="{{url_for(Login)}}">Login</a> 
+            Already have an account? <a class="ml-2" href="#">Login</a> 
             <!-- here we are passing the name of the route function-->
         </small>
     </div>
-
+</div>
 {% endblock %}

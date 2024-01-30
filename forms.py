@@ -10,7 +10,7 @@ class RegistrationForm(FlaskForm):
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', 
                         validators=[DataRequired(), Email()])
-    phone_number = IntegerField('phone number', 
+    phone_number = StringField('phone number', 
                                 validators=[DataRequired(), Optional()])
     password = StringField('Password', 
                            validators=[DataRequired(), Length(min=4, max=16, message="length of 4 and 16 characters")])
@@ -35,7 +35,7 @@ class DoctorsRegistration(FlaskForm):
     Specialisation= SelectField('Qualification', 
                                 choices =[('dematologist','dematologist'), ('dentist', 'dentist'), ('gynacologist', 'gynacologist')], 
                                 validators=[DataRequired(),Length(min=1)])
-    license_number = IntegerField('Licence Number', validators=[DataRequired()])
+    license_number = StringField('Licence Number', validators=[DataRequired()])
     working_hours = SelectField('working hours', 
                                choices=[('8-10', '8-10'), ('10-1', '10-1'), ('2-4','2-4')],
                                validate_choice=True, validators=[DataRequired()])

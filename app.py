@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, flash, redirect
 from forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration
 
 
@@ -15,25 +15,26 @@ def home():
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     form = RegistrationForm()
-    
-    
+    if form.validate_on_submit():
+        flash(f'Account created for {form.FirstName.data}!', 'success')
+        return redirect(url_for('home'))
     return render_template('registration.html',title='register', form=form)
 
 
 @app.route('/Login',  methods=['GET', 'POST'])
 def Login():
-    form = LoginForm
+    form = LoginForm()
     return render_template('login.html', form=form)
 
 @app.route('/appoinment')
 def appointment():
-    form = AppointmentForm
+    form = AppointmentForm()
     return render_template('appointment.html', form=form)
 
 
 @app.route('/Doctors')
 def doctors():
-    form = DoctorsRegistration
+    form = DoctorsRegistration()
     return render_template('doctors.html', form=form)
 
 

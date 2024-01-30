@@ -26,7 +26,7 @@ def Login():
     form = LoginForm()
     return render_template('login.html', form=form)
 
-@app.route('/appoinment')
+@app.route('/appointment')
 def appointment():
     form = AppointmentForm()
     return render_template('appointment.html', form=form)

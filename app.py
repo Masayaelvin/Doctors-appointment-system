@@ -15,25 +15,24 @@ def home():
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     form = RegistrationForm()
-    
-    
+      
     return render_template('registration.html',title='register', form=form)
 
 
 @app.route('/Login',  methods=['GET', 'POST'])
 def Login():
-    form = LoginForm
+    form = LoginForm()
     return render_template('login.html', form=form)
 
-@app.route('/appoinment')
+@app.route('/appointment')
 def appointment():
-    form = AppointmentForm
+    form = AppointmentForm()
     return render_template('appointment.html', form=form)
 
 
-@app.route('/Doctors')
+@app.route('/doctors')
 def doctors():
-    form = DoctorsRegistration
+    form = DoctorsRegistration()
     return render_template('doctors.html', form=form)
 
 

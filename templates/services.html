@@ -1,0 +1,14 @@
+{% extends 'doctors.html'}
+{% block content %}
+<form method="POST" action="">
+    {{ form.hidden_tag() }} 
+    <fieldset class="form-group">
+        <div class="form-group">
+            {{ form.services.label(class='form-control-label')}}
+            {{ form.services(class='form-control form-control-lg', placeholder='enter services') }}
+        </div>
+    </fieldset>
+    <div class="form-group">
+        {{ form.submit(class="btn-outline-info") }}
+     </div>
+{% endblock %}

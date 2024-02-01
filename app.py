@@ -16,13 +16,13 @@ def home():
 def registration():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f'Account created for {form.FirstName.data}!', 'success')
-        return redirect(url_for('home'))
+        flash(f'An account has been created for {form.FirstName.data}', 'success')
+        return redirect(url_for('login'))
     return render_template('registration.html',title='register', form=form)
 
 
 @app.route('/Login',  methods=['GET', 'POST'])
-def Login():
+def login():
     form = LoginForm()
     return render_template('login.html', form=form)
 
@@ -32,7 +32,7 @@ def appointment():
     return render_template('appointment.html', form=form)
 
 
-@app.route('/Doctors')
+@app.route('/doctors')
 def doctors():
     form = DoctorsRegistration()
     return render_template('doctors.html', form=form)

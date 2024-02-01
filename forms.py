@@ -29,7 +29,7 @@ class LoginForm(FlaskForm):
     
 
 class DoctorsRegistration(FlaskForm):
-    Qualification = StringField('Specilization', 
+    Qualification = SelectField('Specilization', 
                                 choices =[('Doctor','Doctor'), ('surgeon', 'surgeon'), ('nurse', 'nurse')],
                                 validators=[DataRequired()])
     Specialisation= SelectField('Qualification', 
@@ -44,7 +44,7 @@ class DoctorsRegistration(FlaskForm):
                                validate_choice=True,
                                validators=[DataRequired()] )
     Short_description = TextAreaField('Short_description')
-    submit =SubmitField('Register')
+    submit =SubmitField('Add details')
 
 class ServiceForm(FlaskForm):
     services = StringField('add a service', validators=[DataRequired()] )
@@ -55,6 +55,6 @@ class AppointmentForm(FlaskForm):
     appointment_date = DateField('Appointment Date', validators=[DataRequired()])
     appointment_time = TimeField('time',validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
-    service = SelectField('Service', choices=[()])
-    doctors_name = StringField('Doctor')
-    submit =SubmitField('Set appointment')
+    service = SelectField('Service', choices=[('teeth removal', 'teeth removal'),('teeth removal', 'teeth removal') ,('teeth removal', 'teeth removal') ])
+    doctor_name = StringField('Doctor')
+    submit =SubmitField('Book Appointment')

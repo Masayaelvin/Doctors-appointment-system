@@ -12,28 +12,95 @@
                 <legend class="border-bottom-mb-4"> Join us</legend>
                 <div class="form-group">
                     {{ form.FirstName.label(class='form-control-label')}}
-                    {{ form.FirstName(class='form-control form-control-lg', placeholder='enter first name') }}
+                    {% if form.FirstName.errors%}
+                        {{ form.FirstName(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.FirstName.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.FirstName(class='form-control form-control-lg is-invalid', placeholder='first name') }}
+                    {%endif%}
 
                 </div>
                 <div class="form-group">
                     {{ form.LastName.label(class='form-control-label')}}
-                    {{ form.LastName(class='form-control form-control-lg', placeholder='enter Last name')}}
+                    {% if form.LastName.errors%}
+                        {{ form.LastName(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.LastName.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.LastName(class='form-control form-control-lg', placeholder='Last name')}}
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     {{ form.email.label(class='form-control-label')}}
-                    {{ form.email(class='form-control form-control-lg', placeholder='enter email')}}
+                    {{ form.email.label(class='form-control-label')}}
+                    {% if form.email.errors%}
+                        {{ form.email(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class='form-control form-control-lg', placeholder='email')}}
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     {{ form.phone_number.label(class='form-control-label')}}
-                    {{ form.phone_number(class='form-control form-control-lg', placeholder='enter phone number')}}
+                    {% if form.phone_number.errors%}
+                        {{ form.phone_number(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.phone_number.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.phone_number(class='form-control form-control-lg', placeholder='phone_number')}}
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     {{ form.password.label(class='form-control-label')}}
-                    {{ form.password(class='form-control form-control-lg', placeholder='enter your password')}}
+                    {% if form.password.errors%}
+                        {{ form.password(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class='form-control form-control-lg', placeholder='password')}}
+                    {% endif %}
                 </div>
                 <div class="form-group">
                     {{ form.confirm_password.label(class='form-control-label')}}
-                    {{ form.confirm_password(class='form-control form-control-lg', placeholder='confirm password')}}
+                    {% if form.confirm_password.errors%}
+                        {{ form.confirm_password(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.confirm_password.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.confirm_password(class='form-control form-control-lg', placeholder='confirm password')}}
+                    {% endif %}
                 </div>
             </fieldset>
             <div class="form-group">
@@ -46,7 +113,7 @@
             Already have an account? 
             <!-- here we are passing the name of the route function-->
         </small>
-        <a class="ml-4" href="{{ url_for('Login')}}"><b>Login</b></a> 
+        <a class="ml-4" href="{{ url_for('login')}}"><b>Login</b></a> 
     </div>
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration
+from forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm
 
 
 app =  Flask(__name__)
@@ -37,6 +37,11 @@ def doctors():
     form = DoctorsRegistration()
     return render_template('doctors.html', form=form)
 
+
+@app.route('/services')
+def service():
+    form = ServiceForm()
+    return render_template('services.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

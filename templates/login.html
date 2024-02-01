@@ -13,12 +13,34 @@
                 
                 <div class="form-group">
                     {{ form.email.label(class='form-control-label')}}
-                    {{ form.email(class='form-control form-control-lg', placeholder='enter email')}}
+                    {% if form.email.errors%}
+                        {{ form.email(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class='form-control form-control-lg', placeholder='email') }}
+                    {%endif%}
                 </div>
                 
                 <div class="form-group">
                     {{ form.password.label(class='form-control-label')}}
-                    {{ form.password(class='form-control form-control-lg', placeholder='enter your password')}}
+                    {% if form.password.errors%}
+                        {{ form.password(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class='form-control form-control-lg', placeholder='password') }}
+                    {%endif%}
                 </div>
             </fieldset>
             <div class="form-group">

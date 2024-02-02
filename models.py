@@ -11,7 +11,7 @@ class User(db.Model):
     phone_number = db.Column(db.Integer, unique=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(20))
-    password = db.Column(db.String, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
     
     def __repr__(self):
         return f"user( username:'{self.firstName}' '{self.lastName}' number: '{self.phone_number}' id:'{self.User_id}')"

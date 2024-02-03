@@ -1,0 +1,8 @@
+FILE: models.py
+    - Class Appointment(db.Model)
+        - Added appointment status field
+        - Added appointment status to __repr__
+
+
+FILE: email_to_patient.txt
+    - Content to be rendered in email

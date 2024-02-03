@@ -74,8 +74,9 @@ class Appointment(db.Model):
     Doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
     client_id = db.Column(db.String(),db.ForeignKey('patient.Patient_id'), nullable=False)
     service = db.Column(db.String(), nullable=False)
+    appointment_status = db.Column(db.String(), nullable=False)
     
     def __repr__(self):
-        return f"appointment( appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}')"
+        return f"appointment( Appointment Id:'{self.appointment_id}' appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}' status:'{self.appointment_status}')"
     
     

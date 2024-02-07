@@ -78,3 +78,4 @@ class Appointment(db.Model):
     
     
     
+db.create_all()

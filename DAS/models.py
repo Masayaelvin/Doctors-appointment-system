@@ -1,17 +1,15 @@
-from app import app
-from flask_sqlalchemy import SQLAlchemy
+from DAS import db
 from datetime import datetime
 
-db = SQLAlchemy(app)
 
 class User(db.Model):
     User_id = db.Column(db.String(), primary_key=True)
-    firstName = db.Column(db.String(20), nullable=False)
-    lastName = db.Column(db.String(20), nullable=False)
+    FirstName = db.Column(db.String(20), nullable=False)
+    LastName = db.Column(db.String(20), nullable=False)
     phone_number = db.Column(db.Integer, unique=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(20))
-    password = db.Column(db.String, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
     
     def __repr__(self):
         return f"user( username:'{self.firstName}' '{self.lastName}' number: '{self.phone_number}' id:'{self.User_id}')"
@@ -79,3 +77,5 @@ class Appointment(db.Model):
         return f"appointment( appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}')"
     
     
+    
+db.create_all()

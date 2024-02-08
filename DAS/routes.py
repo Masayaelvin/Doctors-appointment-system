@@ -47,3 +47,7 @@ def doctors():
 def service():
     form = ServiceForm()
     return render_template('services.html', form=form)
+
+@app.route('/account', methods=['POST', 'GET'])
+def account():
+    return render_template('account.html')

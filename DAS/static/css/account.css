@@ -52,4 +52,19 @@ body {
     color: #3498db; /* Light blue text color for appointment details */
 }
 
+/* ... (previous styles) */
+
+.sidebar a {
+    text-decoration: none;
+    color: #ffffff; /* White link color */
+    font-size: 18px;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff; /* White background on hover */
+    color: #3498db; /* Light blue text color on hover */
+}
+
+/* ... (remaining styles) */
+
 /* Adjust other styles as needed */

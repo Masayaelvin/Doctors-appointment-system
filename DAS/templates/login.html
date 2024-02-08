@@ -9,7 +9,7 @@
         <form method="POST" action="">
             {{ form.hidden_tag() }} 
             <fieldset class="form-group">
-                <legend class="border-bottom-mb-4"> WELCOME BACK !!</legend>
+                <legend class="border-bottom-mb-4"> Log In</legend>
                 
                 <div class="form-group">
                     {{ form.email.label(class='form-control-label')}}
@@ -52,7 +52,7 @@
         <small class="text-muted">
             don't have an account?
         </small>
-        <a class="ml-4" href="{{ url_for('registration')}}"><b>Register here</b></a> 
+        <a class="ml-4" href="{{ url_for('registration')}}"><b>Sign Up here</b></a> 
     </div>
 </div>
 {% endblock %}

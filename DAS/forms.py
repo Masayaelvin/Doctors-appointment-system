@@ -24,16 +24,16 @@ class LoginForm(FlaskForm):
                         validators=[DataRequired(), Email()])
     password = StringField('Password', 
                            validators=[DataRequired(), Length(min=4, max=16, message="length of 4 and 16 characters")])
-    remember =BooleanField('Remember me')
-    submit =SubmitField('Login')
+    remember =BooleanField('Remember Me')
+    submit =SubmitField('Log In')
     
 
 class DoctorsRegistration(FlaskForm):
-    Qualification = SelectField('Specilization', 
+    Qualification = SelectField('Specialization', 
                                 choices =[('Doctor','Doctor'), ('surgeon', 'surgeon'), ('nurse', 'nurse')],
                                 validators=[DataRequired()])
     Specialisation= SelectField('Qualification', 
-                                choices =[('dematologist','dematologist'), ('dentist', 'dentist'), ('gynacologist', 'gynacologist')], 
+                                choices =[('dermatologist','dermatologist'), ('dentist', 'dentist'), ('gynaecologist', 'gynaecologist')], 
                                 validators=[DataRequired(),Length(min=1)])
     license_number = StringField('Licence Number', validators=[DataRequired()])
     working_hours = SelectField('working hours', 
@@ -47,8 +47,8 @@ class DoctorsRegistration(FlaskForm):
     submit =SubmitField('Add details')
 
 class ServiceForm(FlaskForm):
-    services = StringField('add a service', validators=[DataRequired()] )
-    submit = SubmitField('add')
+    services = StringField('Add a service', validators=[DataRequired()] )
+    submit = SubmitField('Add')
     
     
 class AppointmentForm(FlaskForm):

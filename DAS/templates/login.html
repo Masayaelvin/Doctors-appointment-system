@@ -14,7 +14,7 @@
                 <div class="form-group">
                     {{ form.email.label(class='form-control-label')}}
                     {% if form.email.errors%}
-                        {{ form.email(class='form-control form-control-lg is-invalid') }}
+                        {{ form.email(class='form-control form-control-sm is-invalid') }}
                         <div class="invalid-feedback">
                             {% for error in form.email.errors%}
                                 <span>
@@ -23,14 +23,14 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.email(class='form-control form-control-lg', placeholder='email') }}
+                        {{ form.email(class='form-control form-control-sm', placeholder='email') }}
                     {%endif%}
                 </div>
                 
                 <div class="form-group">
                     {{ form.password.label(class='form-control-label')}}
                     {% if form.password.errors%}
-                        {{ form.password(class='form-control form-control-lg is-invalid') }}
+                        {{ form.password(class='form-control form-control-sm is-invalid') }}
                         <div class="invalid-feedback">
                             {% for error in form.password.errors%}
                                 <span>
@@ -39,7 +39,7 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.password(class='form-control form-control-lg', placeholder='password') }}
+                        {{ form.password(class='form-control form-control-sm', placeholder='password') }}
                     {%endif%}
                 </div>
             </fieldset>

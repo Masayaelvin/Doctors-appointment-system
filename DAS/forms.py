@@ -36,6 +36,8 @@ class DoctorsRegistration(FlaskForm):
                                 choices =[('dermatologist','dermatologist'), ('dentist', 'dentist'), ('gynaecologist', 'gynaecologist')], 
                                 validators=[DataRequired(),Length(min=1)])
     license_number = StringField('Licence Number', validators=[DataRequired()])
+    clinic_name = StringField('Clinic Name', validators=[DataRequired(), Length(max=20)])
+    clinic_address = StringField('Clinic Address', validators=[DataRequired(), Length(max=20)])
     working_hours = SelectField('working hours', 
                                choices=[('8-10', '8-10'), ('10-1', '10-1'), ('2-4','2-4')],
                                validate_choice=True, validators=[DataRequired()])

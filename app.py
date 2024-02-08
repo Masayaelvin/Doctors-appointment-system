@@ -16,6 +16,7 @@ def home():
 def registration():
     form = RegistrationForm()
     if form.validate_on_submit():
+        
         flash(f'An account has been created for {form.FirstName.data}', 'success')
         return redirect(url_for('login'))
     return render_template('registration.html',title='register', form=form)
@@ -38,7 +39,7 @@ def doctors():
     return render_template('doctors.html', form=form)
 
 
-@app.route('/services')
+@app.route('/services', methods=['POST', 'GET'])
 def service():
     form = ServiceForm()
     return render_template('services.html', form=form)

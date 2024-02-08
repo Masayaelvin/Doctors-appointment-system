@@ -11,7 +11,7 @@ class User(db.Model):
     phone_number = db.Column(db.Integer, unique=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(20))
-    password = db.Column(db.String, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
     
     def __repr__(self):
         return f"user( username:'{self.firstName}' '{self.lastName}' number: '{self.phone_number}' id:'{self.User_id}')"
@@ -74,9 +74,8 @@ class Appointment(db.Model):
     Doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
     client_id = db.Column(db.String(),db.ForeignKey('patient.Patient_id'), nullable=False)
     service = db.Column(db.String(), nullable=False)
-    appointment_status = db.Column(db.String(), nullable=False)
     
     def __repr__(self):
-        return f"appointment( Appointment Id:'{self.appointment_id}' appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}' status:'{self.appointment_status}')"
+        return f"appointment( appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}')"
     
     

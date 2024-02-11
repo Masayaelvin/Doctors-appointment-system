@@ -10,7 +10,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'Noreply-email@gmail.com'  # Update with your Gmail address
-app.config['MAIL_PASSWORD'] = 'opiyomasaya'         # Update with your Gmail password
+app.config['MAIL_PASSWORD'] = 'yvud tirm yonc tfbf'         # Update with your Gmail password
 app.config['MAIL_DEFAULT_SENDER'] = 'noreply.healthconnect@gmail.com'
 
 # Dummy appointment data (replace with your actual data)

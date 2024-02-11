@@ -29,23 +29,36 @@ def registration():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'masayaelvin@gmail.com' and form.password.data == 'password':
+            flash(f'You have been logged in', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash(f'Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)
 
-@app.route('/appointment')
+@app.route('/appointment', methods=['GET', 'POST'])
 def appointment():
     form = AppointmentForm()
     return render_template('appointment.html', form=form)
 
 
-@app.route('/doctors')
+@app.route('/doctors', methods=['GET', 'POST'])
 def doctors():
     form = DoctorsRegistration()
+    if form.validate_on_submit():
+        flash(f'Your details have been updated' , 'success')
+        
     return render_template('doctors.html', form=form)
 
 
 @app.route('/services', methods=['POST', 'GET'])
 def service():
     form = ServiceForm()
+    if form.validate_on_submit():
+        flash(f'Your service {form.services.data} has been updated' , 'success')
+        
+        
     return render_template('services.html', form=form)
 
 @app.route('/account', methods=['POST', 'GET'])

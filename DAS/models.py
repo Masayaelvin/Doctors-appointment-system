@@ -1,9 +1,13 @@
-from DAS import db
+from DAS import db, login_manager
 from datetime import datetime
+from flask_login import UserMixin
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
-class User(db.Model):
-    User_id = db.Column(db.String(), primary_key=True)
+class User(db.Model, UserMixin):
+    id = db.Column(db.String(), primary_key=True)
     FirstName = db.Column(db.String(20), nullable=False)
     LastName = db.Column(db.String(20), nullable=False)
     phone_number = db.Column(db.Integer, unique=True)
@@ -78,3 +82,4 @@ class Appointment(db.Model):
     
     
     
+# db.create_all()

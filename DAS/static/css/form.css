@@ -70,5 +70,21 @@ body {
     background-color: #2980b9; /* Slightly darker blue on hover */
     border-color: #2980b9; /* Slightly darker border on hover */
 }
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
 
+.form-control-label {
+    color: #3498db; /* Light blue text color */
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    border: 1px solid #3498db; /* Light blue border */
+    border-radius: 4px;
+    padding: 8px; /* Adjust padding as needed */
+    width: 100%;
+}
 /* ... (remaining CSS styles) */

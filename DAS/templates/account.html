@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/account.css')}}">
+    <title>Patient's Appointment Account</title>
+</head>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>Account</h2>
+            <ul>
+                <li><a href="#appointments">Appointments</a></li>
+                <li><a href="#account">Account</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <!-- Content will be dynamically loaded here based on user interactions -->
+            <h2>Welcome to your Appointment Account!</h2>
+            <p>Click on the links in the sidebar to view your appointments, update account information, or adjust settings.</p>
+        </div>
+    </div>
+{% endblock %}

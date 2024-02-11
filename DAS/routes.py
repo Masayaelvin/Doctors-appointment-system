@@ -72,3 +72,8 @@ def service():
 @app.route('/account', methods=['POST', 'GET'])
 def account():
     return render_template('account.html')
+
+@app.route('/logout', methods=['POST', 'GET'])
+def logout():
+    logout_user()
+    return redirect(url_for('home'))

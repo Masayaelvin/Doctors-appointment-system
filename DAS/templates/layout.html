@@ -121,12 +121,12 @@
 													<li><a href="404.html">404 Error</a></li>
 												</ul>
 											</li> -->
+											{% if current_user.is_authenticated %}
+												<li><a href="{{url_for('logout')}}">Log out</a></li>
+											{% else %}
 											<li><a href="{{url_for('registration')}}">Sign Up <i class="icofont-rounded-down"></i></a>
-												<!-- <ul class="dropdown">
-													<li><a href="blog-single.html">Blog Details</a></li>
-												</ul> -->
-											</li>
 											<li><a href="{{url_for('login')}}">Log in</a></li>
+											{% endif %}
 										</ul>
 									</nav>
 								</div>

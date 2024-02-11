@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
+from DAS.models import User
 from wtforms import (StringField, SubmitField, IntegerField, BooleanField,
                      SelectField, TextAreaField, DateField, TimeField)
-from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
+from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, ValidationError
+import phonenumbers
 
 class RegistrationForm(FlaskForm):
     FirstName = StringField('First Name', 
@@ -18,6 +20,28 @@ class RegistrationForm(FlaskForm):
                                    validators=[DataRequired(), EqualTo('password')])
     submit =SubmitField('Sign up')
     
+    
+    #custom  validation for  regform
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('that email is taken, please choose another one')
+        
+    def validate_phone_number(self, phone_number):
+        user = User.query.filter_by(phone_number=phone_number.data).first()
+        if user:
+            raise ValidationError('that phone number is taken, please choose another one')
+        
+        if len(phone_number.data) < 10:
+            raise ValidationError('Invalid phone number')
+        
+        # try:
+        #     p = phonenumbers.parse(phone_number.data)
+        #     if not phonenumbers.is_valid_number(p):
+        #         raise ValueError()
+        # except (phonenumbers.phonenumberutil.NumberParseException, ValueError):
+        #     raise ValidationError('Invalid phone number')
+
 
 class LoginForm(FlaskForm):
     email = StringField('Email', 

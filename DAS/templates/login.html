@@ -39,13 +39,21 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.password(class='form-control form-control-sm', placeholder='password') }}
+                        {{ form.password(type ='password', class='form-control form-control-sm', placeholder='password') }}
                     {%endif%}
                 </div>
+
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <input type="checkbox" onclick="togglePasswordVisibility('password')"> Show password
+                    </div>
+                </div>
+
                 <div class="form-check">
                     {{form.remember(class='form-check-input')}}
                     {{form.remember.label(class='form-check-label')}}
                 </div>
+                
             </fieldset>
             <div class="form-group">
                {{ form.submit(class="btn-outline-info") }}
@@ -61,4 +69,10 @@
         <a class="ml-4" href="{{ url_for('registration')}}"><b>Sign Up here</b></a> 
     </div>
 </div>
+<script>
+    function togglePasswordVisibility(id) {
+        var passwordInput = document.getElementById(id);
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    }
+</script>
 {% endblock %}

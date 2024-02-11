@@ -1,6 +1,8 @@
 from flask import  render_template, url_for, flash, redirect
 from DAS.forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm
+from DAS.models import User
 from flask_bcrypt import Bcrypt
+from flask_login import login_user, current_user, logout_user, login_required
 import uuid
 from DAS import app
 
@@ -18,7 +20,7 @@ def registration():
     if form.validate_on_submit():
         encrpted_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user_id = str(uuid.uuid4())
-        user = User(User_id=user_id, FirstName=form.FirstName.data, LastName=form.LastName.data, phone_number = form.phone_number.data, email=form.email.data, password=encrpted_pwd)
+        user = User(id=user_id, FirstName=form.FirstName.data, LastName=form.LastName.data, phone_number = form.phone_number.data, email=form.email.data, password=encrpted_pwd)
         flash(f'An account has been created for {form.FirstName.data} you can now log in' , 'success')
         db.session.add(user)
         db.session.commit()
@@ -30,9 +32,11 @@ def registration():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'masayaelvin@gmail.com' and form.password.data == 'password':
-            flash(f'You have been logged in', 'success')
-            return redirect(url_for('home'))
+        user =User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash(f'Welcome {form.email.data}!', 'success')
+            return render_template('account.html')
         else:
             flash(f'Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)

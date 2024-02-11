@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who Are You?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+        }
+        .container button {
+            padding: 150px 150px;
+            font-size: 100px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: background-color 0.3s ease;
+            background-color: #80afe2;
+            color: #fff;
+        }
+        .container button:hover {
+            background-color: #0056b3; /* Dimmed blue color on hover */
+        }
+        p {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tell us who you are</h1>
+        <button id="patientBtn">
+            Patient
+            <p>Seeking health services.</p>
+        </button>
+        <button id="doctorBtn">Doctor
+            <p>A registered health consultant...</p>
+        </button>
+    </div>
+</body>
+<script>
+    function sendData(role) {
+        fetch('/your-flask-route', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ role: role })
+        })
+        .then(response => {
+            // Handle response if needed
+            console.log('Data sent successfully');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+{% endblock %}

@@ -46,7 +46,7 @@ def login():
     return render_template('login.html', form=form)
 
 @app.route('/appointment', methods=['GET', 'POST'])
-def appointment():
+def appointment(): 
     form = AppointmentForm()
     return render_template('appointment.html', form=form)
 

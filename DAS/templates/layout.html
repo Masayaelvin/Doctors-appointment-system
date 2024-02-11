@@ -122,10 +122,11 @@
 												</ul>
 											</li> -->
 											{% if current_user.is_authenticated %}
+												<li><a href="{{url_for('account')}}">Account</a></li>
 												<li><a href="{{url_for('logout')}}">Log out</a></li>
 											{% else %}
-											<li><a href="{{url_for('registration')}}">Sign Up <i class="icofont-rounded-down"></i></a>
-											<li><a href="{{url_for('login')}}">Log in</a></li>
+												<li><a href="{{url_for('registration')}}">Sign Up <i class="icofont-rounded-down"></i></a>
+												<li><a href="{{url_for('login')}}">Log in</a></li>
 											{% endif %}
 										</ul>
 									</nav>

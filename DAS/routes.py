@@ -1,4 +1,4 @@
-from flask import  render_template, url_for, flash, redirect
+from flask import  render_template, url_for, flash, redirect, request
 from DAS.forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm
 from DAS.models import User
 from flask_bcrypt import Bcrypt
@@ -39,15 +39,24 @@ def login():
         user =User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
             flash(f'Welcome {form.email.data}!', 'success')
-            return redirect(url_for('account'))
+            return redirect(next_page) if next_page else redirect(url_for('account'))
         else:
             flash(f'Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)
 
+@app.route('/user_type', methods=['GET', 'POST'])
+def usertype():
+    
+    return render_template('usertype.html')
+
+
 @app.route('/appointment', methods=['GET', 'POST'])
-def appointment(): 
+@login_required
+def appointment():
     form = AppointmentForm()
+    form.email.data = current_user.email
     return render_template('appointment.html', form=form)
 
 
@@ -70,6 +79,7 @@ def service():
     return render_template('services.html', form=form)
 
 @app.route('/account', methods=['POST', 'GET'])
+@login_required
 def account():
     return render_template('account.html')
 

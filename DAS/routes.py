@@ -15,6 +15,8 @@ def home():
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
+    if current_user.is_authenticated:
+        return redirect(url_for('account'))
     from DAS.models import User, db
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -30,13 +32,15 @@ def registration():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('account'))
     form = LoginForm()
     if form.validate_on_submit():
         user =User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             flash(f'Welcome {form.email.data}!', 'success')
-            return render_template('account.html')
+            return redirect(url_for('account'))
         else:
             flash(f'Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)

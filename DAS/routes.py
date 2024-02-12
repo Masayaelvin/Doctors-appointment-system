@@ -26,7 +26,7 @@ def registration():
         flash(f'An account has been created for {form.FirstName.data} you can now log in' , 'success')
         db.session.add(user)
         db.session.commit()
-        return redirect(url_for('login'))
+        return redirect(url_for('usertype'))
     return render_template('registration.html',title='register', form=form)
 
 
@@ -48,7 +48,6 @@ def login():
 
 @app.route('/user_type', methods=['GET', 'POST'])
 def usertype():
-    
     return render_template('usertype.html')
 
 

@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     
     def __repr__(self):
-        return f"user( username:'{self.firstName}' '{self.lastName}' number: '{self.phone_number}' id:'{self.User_id}')"
+        return f"user( username:'{self.firstName}' '{self.lastName}' number: '{self.phone_number}' id:'{self.id}')"
     
 # Association Table
 doctor_patient_association = db.Table(
@@ -81,5 +81,5 @@ class Appointment(db.Model):
         return f"appointment( appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}')"
     
     
-    
+# db.drop_all()
 # db.create_all()

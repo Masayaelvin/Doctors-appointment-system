@@ -72,6 +72,21 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
+                    {{ form.user_type.label(class='form-control-label')}}
+                    {% if form.user_type.errors%}
+                        {{ form.user_type(class='form-control form-control-lg is-invalid') }}
+                        <div class="invalid-feedback">
+                            {% for error in form.user_type.errors%}
+                                <span>
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.user_type(class='form-control form-control-lg', placeholder='tell us who you are')}}
+                    {% endif %}
+                </div>
+                <div class="form-group">
                     {{ form.password.label(class='form-control-label')}}
                     {% if form.password.errors%}
                         {{ form.password(class='form-control form-control-lg is-invalid') }}

@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     
     def __repr__(self):
-        return f"user( username:'{self.firstName}' '{self.lastName}' number: '{self.phone_number}' id:'{self.id}')"
+        return f"user( username:'{self.FirstName}' '{self.LastName}' number: '{self.phone_number}' id:'{self.id}')"
     
 # Association Table
 doctor_patient_association = db.Table(
@@ -34,7 +34,6 @@ class Doctor(db.Model):
     clinic_address = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(10), default='Doctor')  # Fixed the typo here
-    password = db.Column(db.String, nullable=False)
     working_hours = db.Column(db.String, nullable=False)
     Short_description = db.Column(db.Text)  # Corrected from db.column to db.Column
     services = db.relationship('Service', backref='doctor', lazy=True)
@@ -81,5 +80,5 @@ class Appointment(db.Model):
         return f"appointment( appointment:'{self.appointment_date}' '{self.appointment_time}' service:'{self.service}')"
     
     
-# db.drop_all()
-# db.create_all()
+db.drop_all()
+db.create_all()

@@ -1,6 +1,6 @@
 from flask import  render_template, url_for, flash, redirect, request
 from DAS.forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm
-from DAS.models import User
+from DAS.models import User, Doctor,Patient, db
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import uuid
@@ -17,16 +17,23 @@ def home():
 def registration():
     if current_user.is_authenticated:
         return redirect(url_for('account'))
-    from DAS.models import User, db
     form = RegistrationForm()
     if form.validate_on_submit():
         encrpted_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user_id = str(uuid.uuid4())
-        user = User(id=user_id, FirstName=form.FirstName.data, LastName=form.LastName.data, phone_number = form.phone_number.data, email=form.email.data, password=encrpted_pwd)
-        flash(f'An account has been created for {form.FirstName.data} you can now log in' , 'success')
+        user = User(id=user_id, FirstName=form.FirstName.data, LastName=form.LastName.data, phone_number = form.phone_number.data, email=form.email.data, user_type= form.user_type.data, password=encrpted_pwd)
         db.session.add(user)
         db.session.commit()
-        return redirect(url_for('usertype'))
+        
+        if form.user_type.data == 'patient':
+            patient = Patient(Patient_id=user.id, firstName=form.FirstName.data, lastName=form.LastName.data, phone_number = form.phone_number.data, email=form.email.data, user_type= form.user_type.data)
+            db.session.add(patient)
+            db.session.commit()
+        else:
+            return redirect(url_for('doctors'))
+        
+        flash(f'An account has been created for {form.FirstName.data} you can now log in' , 'success')
+        return redirect(url_for('login'))
     return render_template('registration.html',title='register', form=form)
 
 
@@ -63,7 +70,12 @@ def appointment():
 def doctors():
     form = DoctorsRegistration()
     if form.validate_on_submit():
-        flash(f'Your details have been updated' , 'success')
+        doc = User.query.filter_by(email=form.email.data).first()
+        doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data)
+        db.session.add(doctor)
+        db.session.commit()
+        flash(f'Your details have been updated succesfully' , 'success')
+        return redirect(url_for('login'))
         
     return render_template('doctors.html', form=form)
 

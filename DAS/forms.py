@@ -56,6 +56,7 @@ class LoginForm(FlaskForm):
     
 
 class DoctorsRegistration(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
     Qualification = SelectField('Specialization', 
                                 choices =[('Doctor','Doctor'), ('surgeon', 'surgeon'), ('nurse', 'nurse')],
                                 validators=[DataRequired()])

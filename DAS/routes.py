@@ -1,6 +1,6 @@
 from flask import  render_template, url_for, flash, redirect, request
 from DAS.forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm
-from DAS.models import User, Doctor,Patient, db
+from DAS.models import User, Doctor,Patient, Service, db
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import uuid
@@ -25,7 +25,7 @@ def registration():
         db.session.add(user)
         db.session.commit()
         
-        if form.user_type.data == 'patient':
+        if form.user_type.data == 'Patient':
             patient = Patient(Patient_id=user.id, firstName=form.FirstName.data, lastName=form.LastName.data, phone_number = form.phone_number.data, email=form.email.data, user_type= form.user_type.data)
             db.session.add(patient)
             db.session.commit()
@@ -47,7 +47,14 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            flash(f'Welcome {form.email.data}!', 'success')
+            if user.user_type == 'Doctor':
+                flash(f'Welcome Doctor {form.email.data}!', 'success')
+                Services = Service.query.all()
+                if len(Services) == 0:
+                    flash("you don't have any services yet please add a service to make your profile complete", "info")
+                    return redirect(url_for('service'))
+            else:
+                flash(f'Welcome {form.email.data}!', 'success')
             return redirect(next_page) if next_page else redirect(url_for('account'))
         else:
             flash(f'Login Unsuccessful. Please check email and password', 'danger')
@@ -63,6 +70,7 @@ def usertype():
 def appointment():
     form = AppointmentForm()
     form.email.data = current_user.email
+    
     return render_template('appointment.html', form=form)
 
 
@@ -84,9 +92,13 @@ def doctors():
 def service():
     form = ServiceForm()
     if form.validate_on_submit():
-        flash(f'Your service {form.services.data} has been updated' , 'success')
-        
-        
+        flash(f'Your service {form.services.data} has been updated succesfully' , 'success')
+        service_id  = str(uuid.uuid4())
+        doc_id = Doctor.query.filter_by(Doctor_id = current_user.id).first().Doctor_id
+        service = Service(service_id = service_id, doctor_id = doc_id, service_name = form.services.data)
+        db.session.add(service)
+        db.session.commit()
+          
     return render_template('services.html', form=form)
 
 @app.route('/account', methods=['POST', 'GET'])

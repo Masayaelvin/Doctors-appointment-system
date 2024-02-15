@@ -5,13 +5,18 @@
     <title>Patient's Appointment Account</title>
 </head>
 
-    <div class="container">
+    <div class="contain">
         <div class="sidebar">
             <h2>Account</h2>
             <ul>
                 <li><a href="#appointments">Appointments</a></li>
                 <li><a href="#account">Account</a></li>
-                <li><a href="#settings">Settings</a></li>
+                {% if current_user.user_type == 'Doctor'%}
+                    <li><a href="#settings">your services</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                {%else%}
+                    <li><a href="#settings">Settings</a></li>
+                {%endif%}
             </ul>
         </div>
 

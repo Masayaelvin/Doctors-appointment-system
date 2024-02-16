@@ -42,7 +42,7 @@ class Doctor(db.Model):
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
     
     def __repr__(self):
-        return f"Doctor( Doctor:'{self.firstName}' '{self.lastName}'number: '{self.phone_number}' id:'{self.user_type}')"
+        return f"Doctor( Doctor:'{self.firstName}' '{self.lastName}')"
 
 
 class Patient(db.Model):

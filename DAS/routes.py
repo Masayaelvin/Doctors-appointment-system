@@ -49,7 +49,8 @@ def login():
             next_page = request.args.get('next')
             if user.user_type == 'Doctor':
                 flash(f'Welcome Doctor {form.email.data}!', 'success')
-                Services = Service.query.all()
+                doctor = Doctor.query.filter_by(email = current_user.email).first()
+                Services = doctor.services
                 if len(Services) == 0:
                     flash("you don't have any services yet please add a service to make your profile complete", "info")
                     return redirect(url_for('service'))

@@ -75,6 +75,11 @@ class DoctorsRegistration(FlaskForm):
                                validators=[DataRequired()] )
     Short_description = TextAreaField('Short_description')
     submit =SubmitField('Add details')
+    
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('that email is taken, please choose another one')
 
 class ServiceForm(FlaskForm):
     services = StringField('Add a service', validators=[DataRequired()] )

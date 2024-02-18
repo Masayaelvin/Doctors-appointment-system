@@ -49,10 +49,10 @@ def login():
             next_page = request.args.get('next')
             if user.user_type == 'Doctor':
                 flash(f'Welcome Doctor {form.email.data}!', 'success')
-                doctor = Doctor.query.filter_by(email = current_user.email).first()
+                doctor = Doctor.query.filter_by(email = current_user.id).first()
                 Services = doctor.services
                 if len(Services) == 0:
-                    flash("you don't have any services yet please add a service to make your profile complete", "info")
+                    flash(f"Doctor {current_user.FirstName} you do not have any services yet please add a service to make your profile complete", "info")
                     return redirect(url_for('service'))
             else:
                 flash(f'Welcome {form.email.data}!', 'success')
@@ -78,7 +78,7 @@ def appointment():
 @app.route('/doctors', methods=['GET', 'POST'])
 def doctors():
     form = DoctorsRegistration()
-    if form.validate_on_submit():
+    if form.validate_on_submit():        
         doc = User.query.filter_by(email=form.email.data).first()
         doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data)
         db.session.add(doctor)
@@ -93,10 +93,9 @@ def doctors():
 def service():
     form = ServiceForm()
     if form.validate_on_submit():
-        flash(f'Your service {form.services.data} has been updated succesfully' , 'success')
+        flash(f'Your service "{form.services.data}" has been updated succesfully' , 'success')
         service_id  = str(uuid.uuid4())
-        doc_id = Doctor.query.filter_by(Doctor_id = current_user.id).first().Doctor_id
-        service = Service(service_id = service_id, doctor_id = doc_id, service_name = form.services.data)
+        service = Service(service_id = service_id, doctor_id = current_user.id, service_name = form.services.data)
         db.session.add(service)
         db.session.commit()
           

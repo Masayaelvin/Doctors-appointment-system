@@ -52,7 +52,7 @@ def login():
             next_page = request.args.get('next')
             if user.user_type == 'Doctor':
                 flash(f'Welcome Doctor {form.email.data}!', 'success')
-                doctor = Doctor.query.filter_by(email = current_user.id).first()
+                doctor = Doctor.query.filter_by(email = current_user.email).first()
                 Services = doctor.services
                 if len(Services) == 0:
                     flash(f"Doctor {current_user.FirstName} you do not have any services yet please add a service to make your profile complete", "info")
@@ -124,7 +124,7 @@ def save_picture(form_picture):
 
 def send_reset_email(user):
     token = user.get_reset_token()
-    msg = Message('Password Reset Request', recipients=[user.email])
+    msg = Message('Password Reset Request',sender= 'noreply.healthconnect@gmail.com' ,recipients=[user.email])
     pass
 
     msg.body = f'''To reset your password, visit the following link: {url_for('reset_token', token=token, _external=True)} 

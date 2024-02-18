@@ -78,18 +78,29 @@ def appointment():
     return render_template('appointment.html', form=form)
 
 
-@app.route('/doctors', methods=['GET', 'POST'])
+@app.route('/doctors_registration', methods=['GET', 'POST'])
 def doctors():
     form = DoctorsRegistration()
     if form.validate_on_submit():        
         doc = User.query.filter_by(email=form.email.data).first()
-        doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data)
+        doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data, specialization=form.Specialisation.data, qualification=form.Qualification.data, profile_pic='default.jpg')
         db.session.add(doctor)
         db.session.commit()
         flash(f'Your details have been updated succesfully' , 'success')
         return redirect(url_for('login'))
         
     return render_template('doctors.html', form=form)
+
+@app.route('/doctor_list', methods=['GET', 'POST'])
+def doctor_list():
+    doctors = Doctor.query.all()
+    return render_template('doctor_list.html', doctors = doctors)
+
+@app.route('/doctor/<doc_id>', methods=['GET', 'POST'])
+def doctor_appointment_booking(doc_id):
+    form = AppointmentForm()    
+    doctors = Doctor.query.all()
+    return render_template('doctor_list.html', doctors = doctors)
 
 
 @app.route('/services', methods=['POST', 'GET'])
@@ -139,11 +150,11 @@ def reset_request():
     form = RequestResetForm()
     if form.validate_on_submit():
         user =User.query.filter_by(email=form.email.data).first()
-        # try:
-        send_reset_email(user)
-        # except:
-        #     flash('An error occured while sending the email', 'danger')
-        #     return redirect(url_for('reset_request'))
+        try:
+            send_reset_email(user)
+        except:
+            flash('An error occured while sending the email', 'danger')
+            return redirect(url_for('reset_request'))
         
         flash('An email has been sent with instructions to reset your password', 'info')
         return redirect(url_for('login'))

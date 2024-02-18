@@ -44,6 +44,8 @@ class Doctor(db.Model):
     firstName = db.Column(db.String(20), nullable=False)
     lastName = db.Column(db.String(20), nullable=False)
     license_number = db.Column(db.Integer, unique=True, nullable=False)
+    qualification = db.Column(db.String(20), nullable=False)
+    specialization = db.Column(db.String(20), nullable=False)
     clinic_name = db.Column(db.String(20), nullable=False)
     clinic_address = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)

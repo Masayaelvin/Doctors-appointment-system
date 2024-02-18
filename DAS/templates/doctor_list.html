@@ -21,7 +21,7 @@
     }
 
     .doctor-card {
-      width: 600px;
+      width: 300px;
       height: 500px;
       margin: 20px;
       border-radius: 8px;
@@ -32,7 +32,7 @@
     }
 
     .doctor-card:hover {
-      background-color: #87CEEB; /* Sky Blue */
+      background-color: #c6dee8; /* Sky Blue */
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
@@ -41,8 +41,11 @@
       color: inherit;
     }
 
+    .doctor-card-header.p {
+      color: black;
+    }
     .doctor-card-header {
-      background-color: #0447d9; /* Light Blue */
+      background-color: #57b9e7; /* Light Blue */
       color: #fff;
       padding: 15px;
       text-align: center;
@@ -82,13 +85,13 @@
     {% for doctor in doctors %}
       <div class="doctor-card">
         <div class="doctor-card-header">
-          <h2>{{ doctor.name }}</h2>
+          <h2>Doctor {{ doctor.firstName }}</h2>
           <p>Clinic: {{ doctor.clinic_name }}</p>
         </div>
         <div class="doctor-card-body">
           <h3>Specialization: {{ doctor.specialization }}</h3>
           <p>Location: {{ doctor.clinic_address }}</p>
-          <p>Location: {{ doctor.license_number }}</p>
+          <p>Licence number: {{ doctor.license_number }}</p>
 
           <h3><b>Services</b></h3>
           <ol>

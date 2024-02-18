@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from DAS.models import User
+from DAS.models import User , Doctor
 from wtforms import (StringField, SubmitField, IntegerField, BooleanField,
                      SelectField, TextAreaField, DateField, TimeField)
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, ValidationError
@@ -82,8 +82,8 @@ class DoctorsRegistration(FlaskForm):
     submit =SubmitField('Add details')
     
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
+        doc = Doctor.query.filter_by(email=email.data).first()
+        if doc:
             raise ValidationError('that email is taken, please choose another one')
 
 class ServiceForm(FlaskForm):

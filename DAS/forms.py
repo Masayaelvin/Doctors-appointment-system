@@ -54,6 +54,11 @@ class LoginForm(FlaskForm):
     remember =BooleanField('Remember Me')
     submit =SubmitField('Log In')
     
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('There is no account with that email. You must register first.')
+    
 
 class DoctorsRegistration(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -93,3 +98,20 @@ class AppointmentForm(FlaskForm):
     service = SelectField('Service', choices=[('teeth removal', 'teeth removal'),('teeth removal', 'teeth removal') ,('teeth removal', 'teeth removal') ])
     doctor_name = StringField('Doctor')
     submit =SubmitField('Book Appointment')
+    
+class RequestResetForm(FlaskForm):
+    email = StringField('Email', 
+                        validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+    
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('There is no account with that email. You must register first.')
+    
+class ResetPasswordForm(FlaskForm):
+    password = StringField('Password', 
+                           validators=[DataRequired(), Length(min=4, max=16, message="length of 4 and 16 characters")])
+    confirm_password = StringField('Confirm Password',
+                                   validators=[DataRequired(), EqualTo('password')])
+    submit =SubmitField('Reset Password')

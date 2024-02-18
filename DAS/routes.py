@@ -1,10 +1,13 @@
 from flask import  render_template, url_for, flash, redirect, request
-from DAS.forms import RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm
-from DAS.models import User, Doctor,Patient, Service, db
+from DAS.forms import (RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm, RequestResetForm, ResetPasswordForm)
+from DAS.models import User, Doctor,Patient, Service
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import uuid
-from DAS import app
+import os
+import secrets
+from DAS import app, mail, db
+from  flask_mail import Message
 
 bcrypt = Bcrypt(app)
 
@@ -110,3 +113,55 @@ def account():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    form_picture.save(picture_path)
+    return picture_fn
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request', recipients=[user.email])
+    pass
+
+    msg.body = f'''To reset your password, visit the following link: {url_for('reset_token', token=token, _external=True)} 
+    if you did not make this request then simply ignore this email and no changes will be made'''
+    
+    mail.send(msg)
+
+@app.route('/reset_password', methods=['POST', 'GET'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user =User.query.filter_by(email=form.email.data).first()
+        # try:
+        send_reset_email(user)
+        # except:
+        #     flash('An error occured while sending the email', 'danger')
+        #     return redirect(url_for('reset_request'))
+        
+        flash('An email has been sent with instructions to reset your password', 'info')
+        return redirect(url_for('login'))
+    return render_template('reset_request.html', title ='reset password', form=form)
+
+@app.route('/reset_password/<token>', methods=['POST', 'GET'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        encrpted_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = encrpted_pwd
+        db.session.commit()
+        flash(f'Your password has been updated! you can now log in' , 'success')
+        return redirect(url_for('login'))
+    return render_template('reset_token.html', title ='reset password', form=form)

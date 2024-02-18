@@ -1,6 +1,7 @@
-from DAS import db, login_manager
+from DAS import db, login_manager, app
 from datetime import datetime
 from flask_login import UserMixin
+from itsdangerous.url_safe import URLSafeSerializer as Serializer
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -14,6 +15,19 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(20))
     password = db.Column(db.String(60), nullable=False)
+    
+    def get_reset_token(self):
+        s = Serializer(app.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id})
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
     
     def __repr__(self):
         return f"user( username:'{self.FirstName}' '{self.LastName}' number: '{self.phone_number}' id:'{self.id}')"
@@ -42,7 +56,7 @@ class Doctor(db.Model):
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
     
     def __repr__(self):
-        return f"Doctor( Doctor:'{self.firstName}' '{self.lastName}'number: '{self.phone_number}' id:'{self.user_type}')"
+        return f"Doctor( Doctor:'{self.firstName}' '{self.lastName}')"
 
 
 class Patient(db.Model):

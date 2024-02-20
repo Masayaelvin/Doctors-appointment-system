@@ -60,7 +60,7 @@ class Doctor(db.Model):
     user_type = db.Column(db.String(10), default='Doctor')
     working_hours = db.Column(db.String, nullable=False)
     Short_description = db.Column(db.Text)
-    services = db.relationship('Service', secondary=doctor_service_association, backref='doctor_services', lazy=True)
+    services = db.relationship('Service', backref='doctor', lazy=True)  # One-to-Many relationship
     patients = db.relationship('Patient', secondary=doctor_patient_association, backref='doctors', lazy=True)
     profile_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
@@ -70,12 +70,12 @@ class Doctor(db.Model):
 
 class Service(db.Model):
     service_id = db.Column(db.String(), primary_key=True)
-    Doctor_id = db.Column(db.String(), nullable=False)
-    doctors = db.relationship('Doctor', secondary=doctor_service_association, backref='service', lazy=True, overlaps="doctor_services,services")
+    doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
     service_name = db.Column(db.String(20), nullable=False)
     
     def __repr__(self):
-        return f"Service( service:'{self.service_id}' '{self.doctor_id}' service:'{self.service_name}')"
+        return f"Service( service:'{self.service_id}' '{self.service_name}')"
+
 
  
 

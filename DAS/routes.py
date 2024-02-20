@@ -82,10 +82,9 @@ def appointment_request(Doctor_id):
     doctor = Doctor.query.get_or_404(Doctor_id)
     form = AppointmentForm()
     form.doctor_name.data = doctor.firstName
-    return render_template('appointment.html', doctor=doctor)
     
+    return render_template('appointment.html', doctor=doctor, form=form)
     
-
 
 @app.route('/doctors_registration', methods=['GET', 'POST'])
 def doctors():
@@ -104,13 +103,6 @@ def doctors():
 def doctor_list():
     doctors = Doctor.query.all()
     return render_template('doctor_list.html', doctors = doctors)
-
-@app.route('/doctor/<doc_id>', methods=['GET', 'POST'])
-def doctor_appointment_booking(doc_id):
-    form = AppointmentForm()    
-    doctors = Doctor.query.all()
-    return render_template('doctor_list.html', doctors = doctors)
-
 
 @app.route('/services', methods=['POST', 'GET'])
 def service():

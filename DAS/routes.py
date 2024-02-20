@@ -69,13 +69,22 @@ def usertype():
     return render_template('usertype.html')
 
 
-@app.route('/appointment', methods=['GET', 'POST'])
+@app.route('/appointment_request', methods=['GET', 'POST'])
 @login_required
 def appointment():
     form = AppointmentForm()
     form.email.data = current_user.email
-    
     return render_template('appointment.html', form=form)
+
+
+@app.route('/appointment/<doctor_id>')
+def appointment_request(Doctor_id):
+    doctor = Doctor.query.get_or_404(Doctor_id)
+    form = AppointmentForm()
+    form.doctor_name.data = doctor.firstName
+    return render_template('appointment.html', doctor=doctor)
+    
+    
 
 
 @app.route('/doctors_registration', methods=['GET', 'POST'])

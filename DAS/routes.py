@@ -118,7 +118,7 @@ def service():
     if form.validate_on_submit():
         flash(f'Your service "{form.services.data}" has been updated succesfully' , 'success')
         service_id  = str(uuid.uuid4())
-        service = Service(service_id = service_id, doctor_id = current_user.id, service_name = form.services.data)
+        service = Service(service_id = service_id, Doctor_id = current_user.id, service_name = form.services.data)
         db.session.add(service)
         db.session.commit()
           

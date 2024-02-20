@@ -70,7 +70,8 @@ class Doctor(db.Model):
 
 class Service(db.Model):
     service_id = db.Column(db.String(), primary_key=True)
-    doctors = db.relationship('Doctor', secondary=doctor_service_association, backref='service', lazy=True)
+    Doctor_id = db.Column(db.String(), nullable=False)
+    doctors = db.relationship('Doctor', secondary=doctor_service_association, backref='service', lazy=True, overlaps="doctor_services,services")
     service_name = db.Column(db.String(20), nullable=False)
     
     def __repr__(self):

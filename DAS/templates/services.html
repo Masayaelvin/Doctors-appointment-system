@@ -22,7 +22,9 @@
                                 {% endfor %}
                             </div>
                         {% else %}
+                        <div class="search_select_box">
                             {{ form.services(class='form-control form-control-sm', placeholder='enter name of service') }}
+                        </div>
                         {%endif%}
                     </div>
             </fieldset>

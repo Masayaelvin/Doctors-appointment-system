@@ -32,12 +32,20 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"user( username:'{self.FirstName}' '{self.LastName}' number: '{self.phone_number}' id:'{self.id}')"
     
-# Association Table
+# Association Table for patient and doctor
 doctor_patient_association = db.Table(
     'doctor_patient_association',
     db.Column('doctor_id', db.String, db.ForeignKey('doctor.Doctor_id')),
     db.Column('patient_id', db.String, db.ForeignKey('patient.Patient_id'))
 )
+
+# Association Table for Doctor and Service
+doctor_service_association = db.Table(
+    'doctor_service_association',
+    db.Column('doctor_id', db.String, db.ForeignKey('doctor.Doctor_id')),
+    db.Column('service_id', db.String, db.ForeignKey('service.service_id'))
+)
+
                     
 class Doctor(db.Model):
     Doctor_id = db.Column(db.String(), primary_key=True)
@@ -52,7 +60,7 @@ class Doctor(db.Model):
     user_type = db.Column(db.String(10), default='Doctor')  # Fixed the typo here
     working_hours = db.Column(db.String, nullable=False)
     Short_description = db.Column(db.Text)  # Corrected from db.column to db.Column
-    services = db.relationship('Service', backref='doctor', lazy=True)
+    services = db.relationship('Service', secondary=doctor_service_association, backref='doctors', lazy=True)
     patients = db.relationship('Patient', secondary=doctor_patient_association, backref='doctors', lazy=True)
     profile_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
@@ -78,7 +86,7 @@ class Patient(db.Model):
                     
 class Service(db.Model):
     service_id = db.Column(db.String(), primary_key=True)
-    doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
+    doctors = db.relationship('Doctor', secondary=doctor_service_association, backref='services', lazy=True)
     service_name = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):

@@ -73,7 +73,8 @@ def usertype():
 @login_required
 def appointment():
     form = AppointmentForm()
-    form.email.data = current_user.email
+    doctors = Doctor.query.all()
+    form.email.data = current_user.email        
     return render_template('appointment.html', form=form)
 
 
@@ -81,6 +82,7 @@ def appointment():
 def appointment_request(Doctor_id):
     doctor = Doctor.query.get_or_404(Doctor_id)
     form = AppointmentForm()
+    form.service.choices = [(service.service_id, service.service_name) for service in doctor.services]
     form.doctor_name.data = doctor.firstName
     
     return render_template('appointment.html', doctor=doctor, form=form)

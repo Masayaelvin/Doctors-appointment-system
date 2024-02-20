@@ -87,7 +87,20 @@ class DoctorsRegistration(FlaskForm):
             raise ValidationError('that email is taken, please choose another one')
 
 class ServiceForm(FlaskForm):
-    services = StringField('Add a service', validators=[DataRequired()] )
+    doctor_services = [
+        ('checkup', 'General Checkup'),
+        ('blood_test', 'Blood Test'),
+        ('x_ray', 'X-Ray'),
+        ('vaccination', 'Vaccination'),
+        ('consultation', 'Consultation'),
+        ('ultrasound', 'Ultrasound'),
+        ('physical_therapy', 'Physical Therapy'),
+        ('surgery', 'Surgery'),
+        ('follow_up', 'Follow-up Appointment'),
+        ('prescription', 'Prescription Renewal'),
+    ]
+
+    services = SelectField('Select a service', choices=doctor_services, validators=[DataRequired()])
     submit = SubmitField('Add')
     
     

@@ -32,12 +32,20 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"user( username:'{self.FirstName}' '{self.LastName}' number: '{self.phone_number}' id:'{self.id}')"
     
-# Association Table
+# Association Table for patient and doctor
 doctor_patient_association = db.Table(
     'doctor_patient_association',
     db.Column('doctor_id', db.String, db.ForeignKey('doctor.Doctor_id')),
     db.Column('patient_id', db.String, db.ForeignKey('patient.Patient_id'))
 )
+
+# Association Table for Doctor and Service
+doctor_service_association = db.Table(
+    'doctor_service_association',
+    db.Column('doctor_id', db.String, db.ForeignKey('doctor.Doctor_id')),
+    db.Column('service_id', db.String, db.ForeignKey('service.service_id'))
+)
+
                     
 class Doctor(db.Model):
     Doctor_id = db.Column(db.String(), primary_key=True)
@@ -49,10 +57,10 @@ class Doctor(db.Model):
     clinic_name = db.Column(db.String(20), nullable=False)
     clinic_address = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    user_type = db.Column(db.String(10), default='Doctor')  # Fixed the typo here
+    user_type = db.Column(db.String(10), default='Doctor')
     working_hours = db.Column(db.String, nullable=False)
-    Short_description = db.Column(db.Text)  # Corrected from db.column to db.Column
-    services = db.relationship('Service', backref='doctor', lazy=True)
+    Short_description = db.Column(db.Text)
+    services = db.relationship('Service', backref='doctor', lazy=True)  # One-to-Many relationship
     patients = db.relationship('Patient', secondary=doctor_patient_association, backref='doctors', lazy=True)
     profile_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
     Appointments = db.relationship('Appointment', backref='doctor', lazy=True)
@@ -60,6 +68,13 @@ class Doctor(db.Model):
     def __repr__(self):
         return f"Doctor( Doctor:'{self.firstName}' '{self.lastName}')"
 
+class Service(db.Model):
+    service_id = db.Column(db.String(), primary_key=True)
+    doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
+    service_name = db.Column(db.String(20), nullable=False)
+    
+    def __repr__(self):
+        return f"Service( service:'{self.service_id}' '{self.service_name}')"
 
 class Patient(db.Model):
     Patient_id = db.Column(db.String(), primary_key=True)
@@ -72,17 +87,7 @@ class Patient(db.Model):
     Patient=db.relationship('Appointment' ,backref='client', lazy=True)
    
     def __repr__(self):
-        return f"Patient( username:'{self.firstName}' '{self.lastName}' number:'{self.phone_number}' id:'{self.email}')"
-    
-    
-                    
-class Service(db.Model):
-    service_id = db.Column(db.String(), primary_key=True)
-    doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
-    service_name = db.Column(db.String(20), nullable=False)
-
-    def __repr__(self):
-        return f"Service( service:'{self.service_id}' '{self.doctor_id}' service:'{self.service_name}')"
+        return f"Patient( username:'{self.firstName}' '{self.lastName}' number:'{self.phone_number}' id:'{self.email}')"    
 
 class Appointment(db.Model):
     appointment_id = db.Column(db.String(), primary_key=True, nullable=False)

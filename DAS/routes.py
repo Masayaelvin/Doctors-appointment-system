@@ -1,11 +1,12 @@
 from flask import  render_template, url_for, flash, redirect, request
 from DAS.forms import (RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm, RequestResetForm, ResetPasswordForm)
-from DAS.models import User, Doctor,Patient, Service
+from DAS.models import User, Doctor,Patient, Service, Appointment
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import uuid
 import os
 import secrets
+from datetime import datetime
 from DAS import app, mail, db
 from  flask_mail import Message
 
@@ -78,13 +79,37 @@ def appointment():
     return render_template('appointment.html', form=form)
 
 
-@app.route('/appointment/<doctor_id>')
-def appointment_request(Doctor_id):
-    doctor = Doctor.query.get_or_404(Doctor_id)
+#doc appointment email sending
+def send_appointment_email(doctor, info):
+    msg = Message('Appointment request',sender= 'noreply.healthconnect@gmail.com' ,recipients=[doctor.email])
+    pass
+
+    msg.body = f''' You have a new appointment request from {info['client_name']} for {info['service']} on {info['appointment_date']} at {info['appointment_time']} visit your dashboard to accept or reject the appointment request'''
+    
+    mail.send(msg)
+
+
+@app.route('/appointment/<Doc_id>', methods=['GET', 'POST'])
+def appointment_request(Doc_id):
+    doctor = Doctor.query.get_or_404(Doc_id)
+    client_id = current_user.id
     form = AppointmentForm()
     form.service.choices = [(service.service_id, service.service_name) for service in doctor.services]
-    form.doctor_name.data = doctor.firstName
+    form.doctor_name.data = doctor.firstName + ' ' + doctor.lastName
     
+    if form.validate_on_submit():
+        appoint_id = str(uuid.uuid4())
+        appointment = Appointment(appointment_id=appoint_id, Doctor_id=Doc_id, client_id= client_id, service= form.service.data, appointment_date= form.appointment_date.data, appointment_time=str(form.appointment_time.data))
+        db.session.add(appointment)
+        db.session.commit()
+        flash(f'Your appointment has been scheduled succesfully an email will be sent to your doctor' , 'success')
+        
+        info = {'client_name': current_user.FirstName + ' ' + current_user.LastName,
+                'service': Service.query.get_or_404(form.service.data).service_name,
+                'appointment_date': form.appointment_date.data, 
+                'appointment_time': form.appointment_time.data}
+        send_appointment_email(doctor , info)
+        
     return render_template('appointment.html', doctor=doctor, form=form)
     
 

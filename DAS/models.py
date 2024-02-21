@@ -76,10 +76,6 @@ class Service(db.Model):
     def __repr__(self):
         return f"Service( service:'{self.service_id}' '{self.service_name}')"
 
-
- 
-
-
 class Patient(db.Model):
     Patient_id = db.Column(db.String(), primary_key=True)
     firstName = db.Column(db.String(20), nullable=False)

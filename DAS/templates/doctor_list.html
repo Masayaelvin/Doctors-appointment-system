@@ -30,7 +30,7 @@
             {% endfor %}
           </ol>
           <a href="doctor1_profile.html">View Profile</a>
-          <a href="#"></a><button class="book-now-button">Book Now</button></a>
+          <a href="{{url_for('appointment_request', Doc_id = doctor.Doctor_id)}}"><button class="book-now-button">Book Now</button></a>
         </div>
       </div>
     {% endfor %}

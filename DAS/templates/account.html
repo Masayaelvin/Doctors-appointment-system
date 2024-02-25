@@ -31,6 +31,11 @@
                         <th>service</th>
                         <th>Status</th>
                     </tr>
+                    {% if appointments == []%}
+                        <tr>
+                            <td colspan="5">No appointments yet</td>
+                        </tr>
+                    {%endif%}
                     {% for appointment in appointments %}
                     <tr>
                         <td>{{ appointment.client.firstName + " " + appointment.client.lastName }}</td>
@@ -52,6 +57,11 @@
                 </table>
             {%else%}
                 <h2 id="appointments">Appointments</h2>
+                {% if appointments == []%}
+                    <tr>
+                        <td colspan="5">No appointments yet</td>
+                    </tr>
+                {%endif%}
                 <table>
                     <tr>
                         <th>Doctor Name</th>
@@ -68,6 +78,7 @@
                         <td>{{ appointment.service }}</td>
                         {% if appointment.status == 'Pending'%}
                             <td class="pending">{{ appointment.status }}</td>
+                            <td class="cancel_btn"><a href="{{url_for('cancel_appointment', appointment_id = appointment.appointment_id)}}">Cancel Appointment</a></td>
                         {%elif appointment.status == 'Approved'%}
                             <td class="approved">{{ appointment.status }}</td>
                         {%else%}

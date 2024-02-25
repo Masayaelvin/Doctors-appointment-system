@@ -95,6 +95,7 @@ class Appointment(db.Model):
     appointment_time=db.Column(db.String, default='8-10')
     Doctor_id = db.Column(db.String(), db.ForeignKey('doctor.Doctor_id'), nullable=False)
     client_id = db.Column(db.String(),db.ForeignKey('patient.Patient_id'), nullable=False)
+    client_email = db.Column(db.String(), nullable=False)
     service = db.Column(db.String(), nullable=False)
     status = db.Column(db.String(), default='Pending')
     

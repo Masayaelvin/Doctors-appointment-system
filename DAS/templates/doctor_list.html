@@ -14,22 +14,21 @@
       <div class="doctor-card">
         <div class="doctor-card-header">
           <h2>Doctor {{ doctor.firstName }}</h2>
-          <p>Clinic: {{ doctor.clinic_name }}</p>
+          <h4>Clinic: {{ doctor.clinic_name }}</h4>
         </div>
         <div class="doctor-card-body">
           <h3>Specialization: {{ doctor.specialization }}</h3>
-          <p>Location: {{ doctor.clinic_address }}</p>
-          <p>Licence number: {{ doctor.license_number }}</p>
-
+          <p><strong>Location:</strong> {{ doctor.clinic_address }}</p>
+          <p><strong>Licence number: </strong>{{ doctor.license_number }}</p>
+          <p><strong>Description: </strong>{{doctor.Short_description}} </p>
           <h3><b>Services</b></h3>
           <ol>
             {% for service in doctor.services %}
-            <li>
-              <div class="ml-2">{{ service.service_name }}</div> 
-            </li>
+              <li>
+                <div class="ml-2">{{ service.service_name }}</div> 
+              </li>
             {% endfor %}
           </ol>
-          <a href="doctor1_profile.html">View Profile</a>
           <a href="{{url_for('appointment_request', Doc_id = doctor.Doctor_id)}}"><button class="book-now-button">Book Now</button></a>
         </div>
       </div>

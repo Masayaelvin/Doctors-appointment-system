@@ -70,13 +70,12 @@ def usertype():
     return render_template('usertype.html')
 
 
-@app.route('/appointment_request', methods=['GET', 'POST'])
+@app.route('/user_account', methods=['GET', 'POST'])
 @login_required
-def appointment():
-    form = AppointmentForm()
-    doctors = Doctor.query.all()
+def user_account():
+    form = RegistrationForm()
     form.email.data = current_user.email        
-    return render_template('appointment.html', form=form)
+    return render_template('user_account.html', form=form)
 
 
 #doc appointment email sending

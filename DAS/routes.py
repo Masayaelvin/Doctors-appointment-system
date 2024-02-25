@@ -88,7 +88,7 @@ def send_appointment_email(doctor, info):
 
 def send_approved_appointment_email(user, info):
     msg = Message('Appointment request approval',sender= 'noreply.healthconnect@gmail.com' ,recipients=[user])
-    msg.body = f''' Your appointment request for {info.service} on {info.appointment_date} at {info.appointment_time} has been approved by your doctor please visit your dashboard to view the appointment details
+    msg.body = f''' your appointment request for {info['service']} on {info['appointment_date']} at {info['appointment_time']} has been approved by your doctor please visit your dashboard to view the appointment details
     
     click here to view your appointment details {url_for('account', _external=True)}'''
     
@@ -96,9 +96,9 @@ def send_approved_appointment_email(user, info):
     
 def send_rejected_appointment_email(user, info):
     msg = Message('Appointment request status',sender= 'noreply.healthconnect@gmail.com' ,recipients=[user])
-    msg.body = f''' Your appointment request for {info.service} on {info.appointment_date} at {info.appointment_time} has been rejected by your doctor please visit your dashboard to view the appointment details
+    msg.body = f''' your appointment request for {info['service']} on {info['appointment_date']} at {info['appointment_time']} has been rejected by your doctor please visit {url_for('account', _external=True)} to view the appointment details'''
     
-    click here to view your appointment details {url_for('account', _external=True)}'''
+    mail.send(msg)
     
 
 #appointment and related 
@@ -135,11 +135,12 @@ def appointment_status_approve(appointment_id):
     approved = Appointment.query.get_or_404(appointment_id)
     approved.status = 'Approved'
     db.session.commit()
-    print(approved.client_id)
+    
     user = approved.client_email
+      
     info = {'service': approved.service,
             'appointment_date': approved.appointment_date, 
-            'appointment_time': approved.appointment_time}    
+            'appointment_time': approved.appointment_time}
     
     flash(f'Your appointment has been approved succesfully email will be send to patient' , 'info')
     send_approved_appointment_email(user, info)
@@ -152,15 +153,22 @@ def appointment_status_reject(appointment_id):
     rejected = Appointment.query.get_or_404(appointment_id)
     rejected.status = 'Rejected'
     db.session.commit()
+    
+    print('app1', rejected)
     user = rejected.client_email
+    
+    print('app2', rejected)
     info = {'service': rejected.service,
             'appointment_date': rejected.appointment_date, 
             'appointment_time': rejected.appointment_time}
+    
+    print('app3', rejected)
     
     flash(f'Your appointment has been rejected succesfully email will be send to patient' , 'info')
     
     send_rejected_appointment_email(user, info)
     
+    print('app4', rejected)
     return render_template('account.html', appointments=appointments)
 
 @app.route('/cancel_appointment/<appointment_id>', methods=['GET', 'POST'])

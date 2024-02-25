@@ -48,10 +48,11 @@
                             <td class="reject_btn"><a href="{{url_for('appointment_status_reject', appointment_id = appointment.appointment_id)}}">Reject</a></td>
                         {%elif appointment.status == 'Approved'%}
                             <td class="approved">{{ appointment.status }}</td>
-                        {%else%}
+                        {%elif appointment.status == 'Rejected'%}
                             <td class="rejected">{{ appointment.status }}</td>
+                        {%else%}
+                            <td class="cancelled">{{ appointment.status }}</td>
                         {%endif%}
-                            
                     </tr>
                     {% endfor %}
                 </table>
@@ -70,6 +71,7 @@
                             <td colspan="5">No appointments yet</td>
                         </tr>
                     {%endif%}
+
                     {% for appointment in appointments %}
                     <tr>
                         <td>{{ appointment.doctor.firstName + " " + appointment.doctor.lastName }}</td>
@@ -81,8 +83,10 @@
                             <td class="cancel_btn"><a href="{{url_for('cancel_appointment', appointment_id = appointment.appointment_id)}}">Cancel Appointment</a></td>
                         {%elif appointment.status == 'Approved'%}
                             <td class="approved">{{ appointment.status }}</td>
-                        {%else%}
+                        {%elif appointment.status == 'Rejected'%}
                             <td class="rejected">{{ appointment.status }}</td>
+                        {%else%}
+                            <td class="cancelled">{{ appointment.status }}</td>
                         {%endif%}
                     </tr>
                     {% endfor %}

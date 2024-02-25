@@ -6,6 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 import uuid
 import os
 import secrets
+from sqlalchemy.orm import joinedload
 from datetime import datetime
 from DAS import app, mail, db
 from  flask_mail import Message
@@ -100,6 +101,11 @@ def send_rejected_appointment_email(user, info):
     
     mail.send(msg)
     
+def send_cancelled_appointment_email(user, info):
+    msg = Message('Appointment request cancelling',sender= 'noreply.healthconnect@gmail.com', recipients=[user])
+    msg.body = f''' an appointment by {current_user.FirstName}  for {info['service']} on {info['appointment_date']} at {info['appointment_time']} has been cancelled please visit {url_for('account', _external=True)} to view the appointment details'''
+    mail.send(msg)
+    
 
 #appointment and related 
 
@@ -152,32 +158,36 @@ def appointment_status_reject(appointment_id):
     appointments = Appointment.query.filter_by(Doctor_id = current_user.id).all()
     rejected = Appointment.query.get_or_404(appointment_id)
     rejected.status = 'Rejected'
-    db.session.commit()
-    
-    print('app1', rejected)
-    user = rejected.client_email
-    
-    print('app2', rejected)
+    db.session.commit()  
+
+    user = rejected.client_email 
+
     info = {'service': rejected.service,
             'appointment_date': rejected.appointment_date, 
             'appointment_time': rejected.appointment_time}
-    
-    print('app3', rejected)
-    
+       
     flash(f'Your appointment has been rejected succesfully email will be send to patient' , 'info')
     
     send_rejected_appointment_email(user, info)
     
-    print('app4', rejected)
+
     return render_template('account.html', appointments=appointments)
 
 @app.route('/cancel_appointment/<appointment_id>', methods=['GET', 'POST'])
 def cancel_appointment(appointment_id):
-    appointments = Appointment.query.filter_by(client_id = current_user.id).all()
+    appointments = Appointment.query.filter_by(client_id = current_user.id).options(joinedload(Appointment.doctor)).all()
     appointment = Appointment.query.get_or_404(appointment_id)
-    db.session.delete(appointment)
+    appointment.status = 'Cancelled'
     db.session.commit()
     flash(f'Your appointment has been cancelled succesfully' , 'success')
+    
+    user = appointment.doctor.email
+    info = {'service': appointment.service,
+            'appointment_date': appointment.appointment_date, 
+            'appointment_time': appointment.appointment_time}
+    
+    send_cancelled_appointment_email(user, info)
+    
     return render_template('account.html', appointments=appointments)
     
     

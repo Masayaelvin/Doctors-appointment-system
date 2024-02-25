@@ -110,17 +110,9 @@
 									<nav class="navigation">
 										<ul class="nav menu">
 											<li class="active"><a href="{{url_for('home')}}">Home <i class="icofont-rounded-down"></i></a>
-												<!-- <ul class="dropdown">
-													<li><a href="{{url_for('home')}}">Home Page 1</a></li>
-												</ul> -->
 											</li>
-											<li><a href="{{url_for('doctors')}}">Doctors </a></li>
+											<li><a href="{{url_for('doctor_list')}}">Doctors </a></li>
 											<li><a href="{{url_for('service')}}">Services </a></li>
-											<!-- <li><a href="#">Pages <i class="icofont-rounded-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="404.html">404 Error</a></li>
-												</ul>
-											</li> -->
 											{% if current_user.is_authenticated %}
 												<li><a href="{{url_for('account')}}">Account</a></li>
 												<li><a href="{{url_for('logout')}}">Log out</a></li>
@@ -135,7 +127,7 @@
 							</div>
 							<div class="col-lg-2 col-12">
 								<div class="get-quote">
-									<a href="{{url_for('appointment')}}" class="btn">Book Appointment</a>
+									<a href="{{url_for('doctor_list')}}" class="btn">Book Appointment</a>
 								</div>
 							</div>
 						</div>
@@ -156,104 +148,6 @@
 		{% endwith %}
 		{% block content %}{% endblock %}
 
-		<!-- Pricing Table -->
-		<!-- <section class="pricing-table section">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12">
-						<div class="section-title">
-							<h2>We Provide You The Best Treatment In Resonable Price</h2>
-							<img src="img/section-img.png" alt="#">
-							<p>Lorem ipsum dolor sit amet consectetur adipiscing elit praesent aliquet. pretiumts</p>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-
-					<div class="col-lg-4 col-md-12 col-12">
-						<div class="single-table">
-
-							<div class="table-head">
-								<div class="icon">
-									<i class="icofont icofont-ui-cut"></i>
-								</div>
-								<h4 class="title">Plastic Suggery</h4>
-								<div class="price">
-									<p class="amount">$199<span>/ Per Visit</span></p>
-								</div>	
-							</div>
-
-							<ul class="table-list">
-								<li><i class="icofont icofont-ui-check"></i>Lorem ipsum dolor sit</li>
-								<li><i class="icofont icofont-ui-check"></i>Cubitur sollicitudin fentum</li>
-								<li class="cross"><i class="icofont icofont-ui-close"></i>Nullam interdum enim</li>
-								<li class="cross"><i class="icofont icofont-ui-close"></i>Donec ultricies metus</li>
-								<li class="cross"><i class="icofont icofont-ui-close"></i>Pellentesque eget nibh</li>
-							</ul>
-							<div class="table-bottom">
-								<a class="btn" href="#">Book Now</a>
-							</div>
-
-						</div>
-					</div>
-
-					<div class="col-lg-4 col-md-12 col-12">
-						<div class="single-table">
-
-							<div class="table-head">
-								<div class="icon">
-									<i class="icofont icofont-tooth"></i>
-								</div>
-								<h4 class="title">Teeth Whitening</h4>
-								<div class="price">
-									<p class="amount">$299<span>/ Per Visit</span></p>
-								</div>	
-							</div>
-
-							<ul class="table-list">
-								<li><i class="icofont icofont-ui-check"></i>Lorem ipsum dolor sit</li>
-								<li><i class="icofont icofont-ui-check"></i>Cubitur sollicitudin fentum</li>
-								<li><i class="icofont icofont-ui-check"></i>Nullam interdum enim</li>
-								<li class="cross"><i class="icofont icofont-ui-close"></i>Donec ultricies metus</li>
-								<li class="cross"><i class="icofont icofont-ui-close"></i>Pellentesque eget nibh</li>
-							</ul>
-							<div class="table-bottom">
-								<a class="btn" href="#">Book Now</a>
-							</div>
-
-						</div>
-					</div>
-
-					<div class="col-lg-4 col-md-12 col-12">
-						<div class="single-table">
-
-							<div class="table-head">
-								<div class="icon">
-									<i class="icofont-heart-beat"></i>
-								</div>
-								<h4 class="title">Heart Suggery</h4>
-								<div class="price">
-									<p class="amount">$399<span>/ Per Visit</span></p>
-								</div>	
-							</div>
-
-							<ul class="table-list">
-								<li><i class="icofont icofont-ui-check"></i>Lorem ipsum dolor sit</li>
-								<li><i class="icofont icofont-ui-check"></i>Cubitur sollicitudin fentum</li>
-								<li><i class="icofont icofont-ui-check"></i>Nullam interdum enim</li>
-								<li><i class="icofont icofont-ui-check"></i>Donec ultricies metus</li>
-								<li><i class="icofont icofont-ui-check"></i>Pellentesque eget nibh</li>
-							</ul>
-							<div class="table-bottom">
-								<a class="btn" href="#">Book Now</a>
-							</div>
-
-						</div>
-					</div>
-
-				</div>	
-			</div>	
-		</section>	 -->
 		<!--/ End Pricing Table -->		
 		<!-- jquery Min JS -->
         <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>

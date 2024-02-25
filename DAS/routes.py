@@ -82,35 +82,104 @@ def appointment():
 #doc appointment email sending
 def send_appointment_email(doctor, info):
     msg = Message('Appointment request',sender= 'noreply.healthconnect@gmail.com' ,recipients=[doctor.email])
-    pass
-
-    msg.body = f''' You have a new appointment request from {info['client_name']} for {info['service']} on {info['appointment_date']} at {info['appointment_time']} visit your dashboard to accept or reject the appointment request'''
+    msg.body = f''' You have a new appointment request from {info['client_name']} for {info['service']} on {info['appointment_date']} at {info['appointment_time']} visit {url_for('account', _external=True)} to accept or reject the appointment request'''
     
     mail.send(msg)
 
+def send_approved_appointment_email(user, info):
+    msg = Message('Appointment request approval',sender= 'noreply.healthconnect@gmail.com' ,recipients=[user])
+    msg.body = f''' your appointment request for {info['service']} on {info['appointment_date']} at {info['appointment_time']} has been approved by your doctor please visit your dashboard to view the appointment details
+    
+    click here to view your appointment details {url_for('account', _external=True)}'''
+    
+    mail.send(msg)
+    
+def send_rejected_appointment_email(user, info):
+    msg = Message('Appointment request status',sender= 'noreply.healthconnect@gmail.com' ,recipients=[user])
+    msg.body = f''' your appointment request for {info['service']} on {info['appointment_date']} at {info['appointment_time']} has been rejected by your doctor please visit {url_for('account', _external=True)} to view the appointment details'''
+    
+    mail.send(msg)
+    
+
+#appointment and related 
 
 @app.route('/appointment/<Doc_id>', methods=['GET', 'POST'])
+@login_required
 def appointment_request(Doc_id):
     doctor = Doctor.query.get_or_404(Doc_id)
     client_id = current_user.id
     form = AppointmentForm()
-    form.service.choices = [(service.service_id, service.service_name) for service in doctor.services]
+    form.email.data = current_user.email
+    form.service.choices = [(service.service_name, service.service_name) for service in doctor.services]
     form.doctor_name.data = doctor.firstName + ' ' + doctor.lastName
     
     if form.validate_on_submit():
         appoint_id = str(uuid.uuid4())
-        appointment = Appointment(appointment_id=appoint_id, Doctor_id=Doc_id, client_id= client_id, service= form.service.data, appointment_date= form.appointment_date.data, appointment_time=str(form.appointment_time.data))
+        appointment = Appointment(appointment_id=appoint_id, Doctor_id=Doc_id, client_id= client_id, service= form.service.data, appointment_date= form.appointment_date.data, appointment_time=str(form.appointment_time.data), client_email=form.email.data)
         db.session.add(appointment)
         db.session.commit()
         flash(f'Your appointment has been scheduled succesfully an email will be sent to your doctor' , 'success')
         
         info = {'client_name': current_user.FirstName + ' ' + current_user.LastName,
-                'service': Service.query.get_or_404(form.service.data).service_name,
+                'service': form.service.data,
                 'appointment_date': form.appointment_date.data, 
                 'appointment_time': form.appointment_time.data}
+        
         send_appointment_email(doctor , info)
         
     return render_template('appointment.html', doctor=doctor, form=form)
+
+@app.route('/appointment_status_approve/<appointment_id>', methods=['GET', 'POST'])
+def appointment_status_approve(appointment_id):
+    appointments = Appointment.query.filter_by(Doctor_id = current_user.id).all()
+    approved = Appointment.query.get_or_404(appointment_id)
+    approved.status = 'Approved'
+    db.session.commit()
+    
+    user = approved.client_email
+      
+    info = {'service': approved.service,
+            'appointment_date': approved.appointment_date, 
+            'appointment_time': approved.appointment_time}
+    
+    flash(f'Your appointment has been approved succesfully email will be send to patient' , 'info')
+    send_approved_appointment_email(user, info)
+    
+    return render_template('account.html', appointments=appointments)
+
+@app.route('/appointment_status_reject/<appointment_id>', methods=['GET', 'POST'])
+def appointment_status_reject(appointment_id):
+    appointments = Appointment.query.filter_by(Doctor_id = current_user.id).all()
+    rejected = Appointment.query.get_or_404(appointment_id)
+    rejected.status = 'Rejected'
+    db.session.commit()
+    
+    print('app1', rejected)
+    user = rejected.client_email
+    
+    print('app2', rejected)
+    info = {'service': rejected.service,
+            'appointment_date': rejected.appointment_date, 
+            'appointment_time': rejected.appointment_time}
+    
+    print('app3', rejected)
+    
+    flash(f'Your appointment has been rejected succesfully email will be send to patient' , 'info')
+    
+    send_rejected_appointment_email(user, info)
+    
+    print('app4', rejected)
+    return render_template('account.html', appointments=appointments)
+
+@app.route('/cancel_appointment/<appointment_id>', methods=['GET', 'POST'])
+def cancel_appointment(appointment_id):
+    appointments = Appointment.query.filter_by(client_id = current_user.id).all()
+    appointment = Appointment.query.get_or_404(appointment_id)
+    db.session.delete(appointment)
+    db.session.commit()
+    flash(f'Your appointment has been cancelled succesfully' , 'success')
+    return render_template('account.html', appointments=appointments)
+    
     
 
 @app.route('/doctors_registration', methods=['GET', 'POST'])
@@ -118,6 +187,10 @@ def doctors():
     form = DoctorsRegistration()
     if form.validate_on_submit():        
         doc = User.query.filter_by(email=form.email.data).first()
+        validate_doc = Doctor.query.filter_by(license_number = form.license_number.data).first()
+        if validate_doc:
+            flash('an account with that licence number as already been created', 'danger')
+            return redirect(url_for('doctors'))
         doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data, specialization=form.Specialisation.data, qualification=form.Qualification.data, profile_pic='default.jpg')
         db.session.add(doctor)
         db.session.commit()
@@ -137,7 +210,7 @@ def service():
     if form.validate_on_submit():
         flash(f'Your service "{form.services.data}" has been updated succesfully' , 'success')
         service_id  = str(uuid.uuid4())
-        service = Service(service_id = service_id, Doctor_id = current_user.id, service_name = form.services.data)
+        service = Service(service_id = service_id, doctor_id = current_user.id, service_name = form.services.data)
         db.session.add(service)
         db.session.commit()
           
@@ -146,7 +219,11 @@ def service():
 @app.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
-    return render_template('account.html')
+    if current_user.user_type == 'Doctor':
+        appointments = Appointment.query.filter_by(Doctor_id = current_user.id).all()
+    else:
+        appointments = Appointment.query.filter_by(client_id = current_user.id).all()
+    return render_template('account.html', appointments=appointments, user=current_user)
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
@@ -160,6 +237,8 @@ def save_picture(form_picture):
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
     form_picture.save(picture_path)
     return picture_fn
+
+#resetting password route 
 
 def send_reset_email(user):
     token = user.get_reset_token()

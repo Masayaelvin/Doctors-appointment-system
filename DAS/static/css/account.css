@@ -35,6 +35,7 @@ body {
     text-decoration: none;
     color: #3498db; /* Light blue link color */
     font-size: 18px;
+    transition: color 0.3s;
 }
 
 .sidebar a:hover {
@@ -42,12 +43,48 @@ body {
     color: #3498db; /* Light blue text color on hover */
 }
 
+.approved {
+    background-color: #34db50;
+    color: #fff;
+}
+
+.reject_btn,.approve_btn, .pending, .approved, .rejected {
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for button colors */
+}
+
+.reject_btn{
+    background-color: #e74c3c;
+    color: #fff;
+
+}
+.approve_btn{
+    background-color: #34db50;
+    color: #fff;
+}
+
+.cancel_btn{
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.rejected {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.pending {
+    background-color: #f39c12;
+    color: #fff;
+}
 .content {
     flex: 1;
     padding: 20px;
 }
 
-/* Additional styling for Appointments and Account sections */
+
 .appointments-list {
     color: #3498db; /* Light blue text color for appointment details */
 }
@@ -68,3 +105,33 @@ body {
 /* ... (remaining styles) */
 
 /* Adjust other styles as needed */
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #3498db; /* Light blue border for cells */
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #3498db;
+    color: #ffffff; /* White text color for table headers */
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .contain {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+    }
+}

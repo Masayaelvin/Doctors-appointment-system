@@ -57,11 +57,6 @@
                 </table>
             {%else%}
                 <h2 id="appointments">Appointments</h2>
-                {% if appointments == []%}
-                    <tr>
-                        <td colspan="5">No appointments yet</td>
-                    </tr>
-                {%endif%}
                 <table>
                     <tr>
                         <th>Doctor Name</th>
@@ -70,6 +65,11 @@
                         <th>service</th>
                         <th>Status</th>
                     </tr>
+                    {% if appointments == []%}
+                        <tr>
+                            <td colspan="5">No appointments yet</td>
+                        </tr>
+                    {%endif%}
                     {% for appointment in appointments %}
                     <tr>
                         <td>{{ appointment.doctor.firstName + " " + appointment.doctor.lastName }}</td>

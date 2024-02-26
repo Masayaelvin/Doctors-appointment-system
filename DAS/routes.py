@@ -101,6 +101,13 @@ def send_rejected_appointment_email(user, info):
     
 
 #appointment and related 
+@app.route('/appointment_request', methods=['GET', 'POST'])
+@login_required
+def appointment():
+    form = AppointmentForm()
+    doctors = Doctor.query.all()
+    form.email.data = current_user.email        
+    return render_template('appointment.html', form=form)
 
 @app.route('/appointment/<Doc_id>', methods=['GET', 'POST'])
 @login_required
@@ -223,6 +230,11 @@ def account():
     else:
         appointments = Appointment.query.filter_by(client_id = current_user.id).all()
     return render_template('account.html', appointments=appointments, user=current_user)
+
+@app.route('/user_account', methods=['GET', 'POST'])
+def user_acccount():
+    profile_pic = url_for('static', filename='Profile_pics/' + current_user.profile_pic)
+    return render_template('user_account.html', profile_pic=profile_pic)
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():

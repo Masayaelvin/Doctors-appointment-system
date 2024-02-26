@@ -63,12 +63,13 @@ def user_account():
     profile_pic = url_for('static', filename='profile_pics/' + current_user.profile_pic)
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        current_user.FirstName = form.FirstName.data
-        current_user.LastName = form.LastName.data
-        current_user.email = form.email.data
-        db.session.commit()
-        flash('Your account has been updated!', 'success')
-        return redirect(url_for('account'))
+        if current_user.user_type == 'Patient':
+            current_user.FirstName = form.FirstName.data
+            current_user.LastName = form.LastName.data
+            current_user.email = form.email.data
+            db.session.commit()
+            flash('Your account has been updated!', 'success')
+            return redirect(url_for('account'))
     return render_template('user_account.html', profile_pic=profile_pic, user=current_user, form=form)
 
 

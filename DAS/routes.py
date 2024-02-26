@@ -41,6 +41,28 @@ def registration():
         return redirect(url_for('login'))
     return render_template('registration.html',title='register', form=form)
 
+@app.route('/doctors_registration', methods=['GET', 'POST'])
+def doctors():
+    form = DoctorsRegistration()
+    if form.validate_on_submit():        
+        doc = User.query.filter_by(email=form.email.data).first()
+        validate_doc = Doctor.query.filter_by(license_number = form.license_number.data).first()
+        if validate_doc:
+            flash('an account with that licence number as already been created', 'danger')
+            return redirect(url_for('doctors'))
+        doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data, specialization=form.Specialisation.data, qualification=form.Qualification.data, profile_pic='default.jpg')
+        db.session.add(doctor)
+        db.session.commit()
+        flash(f'Your details have been updated succesfully' , 'success')
+        return redirect(url_for('login'))
+        
+    return render_template('doctors.html', form=form)
+
+@app.route('/user_account', methods=['GET', 'POST'])
+def user_account():
+    
+    return render_template('user_account.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -189,25 +211,6 @@ def cancel_appointment(appointment_id):
     send_cancelled_appointment_email(user, info)
     
     return render_template('account.html', appointments=appointments)
-    
-    
-
-@app.route('/doctors_registration', methods=['GET', 'POST'])
-def doctors():
-    form = DoctorsRegistration()
-    if form.validate_on_submit():        
-        doc = User.query.filter_by(email=form.email.data).first()
-        validate_doc = Doctor.query.filter_by(license_number = form.license_number.data).first()
-        if validate_doc:
-            flash('an account with that licence number as already been created', 'danger')
-            return redirect(url_for('doctors'))
-        doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data, specialization=form.Specialisation.data, qualification=form.Qualification.data, profile_pic='default.jpg')
-        db.session.add(doctor)
-        db.session.commit()
-        flash(f'Your details have been updated succesfully' , 'success')
-        return redirect(url_for('login'))
-        
-    return render_template('doctors.html', form=form)
 
 @app.route('/doctor_list', methods=['GET', 'POST'])
 def doctor_list():

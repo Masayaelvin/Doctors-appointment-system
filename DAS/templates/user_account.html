@@ -2,6 +2,8 @@
 {% block content %}
 <head>
     <link rel="stylesheet" href="{{url_for('static', filename='css/account.css')}}">
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/user_account.css')}}">
     <title>Patient's Appointment Account</title>
 </head>
 
@@ -9,14 +11,14 @@
         <div class="sidebar">
             <h2>Account</h2>
             <ul>
-                <li><a href="#appointments">Appointments</a></li>
+                <li><a href="{{url_for('account')}}">Appointments</a></li>
                 <li><a href="#account">Account</a></li>
                 {% if current_user.user_type == 'Doctor'%}
                     <li><a href="#settings">your services</a></li>
                     <li><a href="{{url_for('user_account')}}">Update Account</a></li>
                 {%else%}
                     <li><a href="{{url_for('user_account')}}">Update Account</a></li>
-                {%endif%}Update Account
+                {%endif%}
             </ul>
         </div>
 
@@ -34,7 +36,7 @@
                         <form method="POST" action="">
                             {{ form.hidden_tag() }} 
                             <fieldset class="form-group">
-                                <legend class="border-bottom-mb-4"> Join us</legend>
+                                <legend class="border-bottom-mb-4">Update Account</legend>
                                 <div class="form-group">
                                     {{ form.FirstName.label(class='form-control-label')}}
                                     {% if form.FirstName.errors%}

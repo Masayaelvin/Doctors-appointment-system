@@ -1,11 +1,12 @@
 from flask import  render_template, url_for, flash, redirect, request
-from DAS.forms import (RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm, RequestResetForm, ResetPasswordForm)
+from DAS.forms import (RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm, RequestResetForm, ResetPasswordForm, UpdateAccountForm)
 from DAS.models import User, Doctor,Patient, Service, Appointment
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 import uuid
 import os
 import secrets
+from sqlalchemy.orm import joinedload
 from datetime import datetime
 from DAS import app, mail, db
 from  flask_mail import Message
@@ -40,6 +41,36 @@ def registration():
         return redirect(url_for('login'))
     return render_template('registration.html',title='register', form=form)
 
+@app.route('/doctors_registration', methods=['GET', 'POST'])
+def doctors():
+    form = DoctorsRegistration()
+    if form.validate_on_submit():        
+        doc = User.query.filter_by(email=form.email.data).first()
+        validate_doc = Doctor.query.filter_by(license_number = form.license_number.data).first()
+        if validate_doc:
+            flash('an account with that licence number as already been created', 'danger')
+            return redirect(url_for('doctors'))
+        doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data, specialization=form.Specialisation.data, qualification=form.Qualification.data, profile_pic='default.jpg')
+        db.session.add(doctor)
+        db.session.commit()
+        flash(f'Your details have been updated succesfully' , 'success')
+        return redirect(url_for('login'))
+        
+    return render_template('doctors.html', form=form)
+
+@app.route('/user_account', methods=['GET', 'POST'])
+def user_account():
+    profile_pic = url_for('static', filename='profile_pics/' + current_user.profile_pic)
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.FirstName = form.FirstName.data
+        current_user.LastName = form.LastName.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('account'))
+    return render_template('user_account.html', profile_pic=profile_pic, user=current_user, form=form)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -65,17 +96,14 @@ def login():
             flash(f'Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form=form)
 
-@app.route('/user_type', methods=['GET', 'POST'])
-def usertype():
-    return render_template('usertype.html')
 
-
-@app.route('/user_account', methods=['GET', 'POST'])
+@app.route('/appointment_request', methods=['GET', 'POST'])
 @login_required
-def user_account():
-    form = RegistrationForm()
+def appointment():
+    form = AppointmentForm()
+    doctors = Doctor.query.all()
     form.email.data = current_user.email        
-    return render_template('user_account.html', form=form)
+    return render_template('appointment.html', form=form)
 
 
 #doc appointment email sending
@@ -99,15 +127,13 @@ def send_rejected_appointment_email(user, info):
     
     mail.send(msg)
     
+def send_cancelled_appointment_email(user, info):
+    msg = Message('Appointment request cancelling',sender= 'noreply.healthconnect@gmail.com', recipients=[user])
+    msg.body = f''' an appointment by {current_user.FirstName}  for {info['service']} on {info['appointment_date']} at {info['appointment_time']} has been cancelled please visit {url_for('account', _external=True)} to view the appointment details'''
+    mail.send(msg)
+    
 
 #appointment and related 
-@app.route('/appointment_request', methods=['GET', 'POST'])
-@login_required
-def appointment():
-    form = AppointmentForm()
-    doctors = Doctor.query.all()
-    form.email.data = current_user.email        
-    return render_template('appointment.html', form=form)
 
 @app.route('/appointment/<Doc_id>', methods=['GET', 'POST'])
 @login_required
@@ -158,52 +184,37 @@ def appointment_status_reject(appointment_id):
     appointments = Appointment.query.filter_by(Doctor_id = current_user.id).all()
     rejected = Appointment.query.get_or_404(appointment_id)
     rejected.status = 'Rejected'
-    db.session.commit()
-    
-    print('app1', rejected)
-    user = rejected.client_email
-    
-    print('app2', rejected)
+    db.session.commit()  
+
+    user = rejected.client_email 
+
     info = {'service': rejected.service,
             'appointment_date': rejected.appointment_date, 
             'appointment_time': rejected.appointment_time}
-    
-    print('app3', rejected)
-    
+       
     flash(f'Your appointment has been rejected succesfully email will be send to patient' , 'info')
     
     send_rejected_appointment_email(user, info)
     
-    print('app4', rejected)
+
     return render_template('account.html', appointments=appointments)
 
 @app.route('/cancel_appointment/<appointment_id>', methods=['GET', 'POST'])
 def cancel_appointment(appointment_id):
-    appointments = Appointment.query.filter_by(client_id = current_user.id).all()
+    appointments = Appointment.query.filter_by(client_id = current_user.id).options(joinedload(Appointment.doctor)).all()
     appointment = Appointment.query.get_or_404(appointment_id)
-    db.session.delete(appointment)
+    appointment.status = 'Cancelled'
     db.session.commit()
     flash(f'Your appointment has been cancelled succesfully' , 'success')
+    
+    user = appointment.doctor.email
+    info = {'service': appointment.service,
+            'appointment_date': appointment.appointment_date, 
+            'appointment_time': appointment.appointment_time}
+    
+    send_cancelled_appointment_email(user, info)
+    
     return render_template('account.html', appointments=appointments)
-    
-    
-
-@app.route('/doctors_registration', methods=['GET', 'POST'])
-def doctors():
-    form = DoctorsRegistration()
-    if form.validate_on_submit():        
-        doc = User.query.filter_by(email=form.email.data).first()
-        validate_doc = Doctor.query.filter_by(license_number = form.license_number.data).first()
-        if validate_doc:
-            flash('an account with that licence number as already been created', 'danger')
-            return redirect(url_for('doctors'))
-        doctor = Doctor(Doctor_id=doc.id, firstName=doc.FirstName, lastName=doc.LastName, license_number=form.license_number.data, clinic_name=form.clinic_name.data, clinic_address=form.clinic_address.data, email=form.email.data, working_hours=form.working_hours.data, Short_description=form.Short_description.data, specialization=form.Specialisation.data, qualification=form.Qualification.data, profile_pic='default.jpg')
-        db.session.add(doctor)
-        db.session.commit()
-        flash(f'Your details have been updated succesfully' , 'success')
-        return redirect(url_for('login'))
-        
-    return render_template('doctors.html', form=form)
 
 @app.route('/doctor_list', methods=['GET', 'POST'])
 def doctor_list():
@@ -230,11 +241,6 @@ def account():
     else:
         appointments = Appointment.query.filter_by(client_id = current_user.id).all()
     return render_template('account.html', appointments=appointments, user=current_user)
-
-@app.route('/user_account', methods=['GET', 'POST'])
-def user_acccount():
-    profile_pic = url_for('static', filename='Profile_pics/' + current_user.profile_pic)
-    return render_template('user_account.html', profile_pic=profile_pic)
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():

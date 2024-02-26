@@ -70,6 +70,11 @@ body {
     color: #fff;
 }
 
+.cancelled {
+    background-color:grey;
+    color: #fff;
+}   
+
 .rejected {
     background-color: #e74c3c;
     color: #fff;

@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     user_type = db.Column(db.String(20))
     password = db.Column(db.String(60), nullable=False)
+    profile_pic = db.Column(db.String(20), nullable=False, default='default.jpg')
     
     def get_reset_token(self):
         s = Serializer(app.config['SECRET_KEY'])
@@ -104,4 +105,4 @@ class Appointment(db.Model):
     
     
 # db.drop_all()
-# db.create_all()
+db.create_all()

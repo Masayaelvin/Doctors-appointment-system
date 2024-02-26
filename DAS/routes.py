@@ -58,21 +58,6 @@ def doctors():
         
     return render_template('doctors.html', form=form)
 
-@app.route('/user_account', methods=['GET', 'POST'])
-def user_account():
-    profile_pic = url_for('static', filename='profile_pics/' + current_user.profile_pic)
-    form = UpdateAccountForm()
-    if form.validate_on_submit():
-        if current_user.user_type == 'Patient':
-            current_user.FirstName = form.FirstName.data
-            current_user.LastName = form.LastName.data
-            current_user.email = form.email.data
-            db.session.commit()
-            flash('Your account has been updated!', 'success')
-            return redirect(url_for('account'))
-    return render_template('user_account.html', profile_pic=profile_pic, user=current_user, form=form)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -105,6 +90,29 @@ def appointment():
     doctors = Doctor.query.all()
     form.email.data = current_user.email        
     return render_template('appointment.html', form=form)
+
+
+@app.route('/user_account', methods=['GET', 'POST'])
+def user_account():
+    profile_pic = url_for('static', filename='profile_pics/' + current_user.profile_pic)
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        if current_user.user_type == 'Patient':
+            current_user.FirstName = form.FirstName.data
+            current_user.LastName = form.LastName.data
+            current_user.email = form.email.data
+            db.session.commit()
+            flash('Your account has been updated!', 'success')
+            return redirect(url_for('account'))
+    return render_template('user_account.html', profile_pic=profile_pic, user=current_user, form=form)
+
+
+@app.route('/doc_services', methods=['GET', 'POST'])
+def doc_services():
+    doctor = Doctor.query.filter_by(email = current_user.email).first()
+    services = doctor.services
+    return render_template('doc_services.html', services=services, doctor=doctor)
+
 
 
 #doc appointment email sending

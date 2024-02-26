@@ -1,5 +1,5 @@
 from flask import  render_template, url_for, flash, redirect, request
-from DAS.forms import (RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm, RequestResetForm, ResetPasswordForm)
+from DAS.forms import (RegistrationForm, LoginForm, AppointmentForm, DoctorsRegistration, ServiceForm, RequestResetForm, ResetPasswordForm, UpdateAccountForm)
 from DAS.models import User, Doctor,Patient, Service, Appointment
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
@@ -60,8 +60,9 @@ def doctors():
 
 @app.route('/user_account', methods=['GET', 'POST'])
 def user_account():
-    
-    return render_template('user_account.html')
+    profile_pic = url_for('static', filename='profile_pics/' + current_user.profile_pic)
+    form = UpdateAccountForm()
+    return render_template('user_account.html', profile_pic=profile_pic, user=current_user, form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -5,6 +5,8 @@ from wtforms import (StringField, SubmitField, IntegerField, BooleanField,
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, ValidationError
 import phonenumbers
 
+from flask_login import current_user
+
 class RegistrationForm(FlaskForm):
     FirstName = StringField('First Name', 
                             validators=[DataRequired(), Length(min=2, max=20)])
@@ -128,3 +130,33 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = StringField('Confirm Password',
                                    validators=[DataRequired(), EqualTo('password')])
     submit =SubmitField('Reset Password')
+    
+
+class UpdateAccountForm(FlaskForm):
+    FirstName = StringField('First Name', 
+                            validators=[DataRequired(), Length(min=2, max=20)])
+    LastName = StringField('Last Name', 
+                           validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', 
+                        validators=[DataRequired(), Email()])
+    phone_number = StringField('phone number', 
+                                validators=[DataRequired(), Optional()])
+    
+    submit =SubmitField('Update')
+    
+    
+    def validate_email(self, email):
+        if email.data != current_user.email:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('that email is taken, please choose another one')
+        
+    def validate_phone_number(self, phone_number):
+        if phone_number.data != current_user.phone_number:
+            user = User.query.filter_by(phone_number=phone_number.data).first()
+            if user:
+                raise ValidationError('that phone number is taken, please choose another one')
+        
+        if len(phone_number.data) < 10:
+            raise ValidationError('Invalid phone number')
+        

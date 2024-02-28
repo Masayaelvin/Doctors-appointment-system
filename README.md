@@ -17,13 +17,29 @@ Responsive design: The user interface is designed using Bootstrap templates, ens
 Technologies Used
 
 
-Flask: Python-based web framework used for developing the backend of the application.
-SQLite: Lightweight relational database management system used for storing user data and appointment information.
-Bootstrap: Frontend framework used for designing responsive and mobile-friendly user interfaces.
-Python libraries: Various Python libraries are used for handling email notifications, form validation, and other functionalities.
+Flask: 
+
+	Python-based web framework used for developing the backend of the application.
+
+
+SQLite: 
+
+	Lightweight relational database management system used for storing user data and appointment information.
+
+
+Bootstrap: 
+	
+	Frontend framework used for designing responsive and mobile-friendly user interfaces.
+
+
+Python libraries: 
+
+	Various Python libraries are used for handling email notifications, form validation, and other functionalities.
 
 
 Getting Started
+
+
 To set up the Doctors Appointment System locally, follow these steps:
 
 Clone the repository to your local machine:
@@ -46,5 +62,11 @@ Run the application:
 Developers
 
 
-Elvin Masaya: Lead developer responsible for backend development and database management.
-Gabriel Opiyo: Frontend developer responsible for designing and implementing the user interface using Bootstrap templates.
+Elvin Masaya
+
+	Lead developer responsible for backend development and database management.
+
+
+Gabriel Opiyo
+
+	Frontend developer responsible for designing and implementing the user interface using Bootstrap templates.
